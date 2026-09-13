@@ -73,15 +73,15 @@
   사망         라온, 이린, 세라
 
 ── 생존자 State ─────────────────────────────────────────────────
-  세인   hp= 55/100 fatigue=54 fear= 20 memory=5건 goals=[never_abandon_ally]
+  세인   hp= 55/100 fatigue=54 fear= 20 memory=7건 goals=[never_abandon_ally]
 
 ── 탑의 기록 — 발견된 층 ─────────────────────────────────────────────
   10개 층이 기록에 남았다: tower_floor_1, tower_floor_2, tower_floor_3, tower_floor_4, tower_floor_5, tower_floor_6, tower_floor_7, tower_floor_8, tower_floor_9, tower_floor_10
   같은 층을 다시 올라도 다시 발견되지 않는다 — tower_floor_1는 1회만 기록된다
 
-── Event Log — 100건 ──────────────────────────────────────────
+── Event Log — 102건 ──────────────────────────────────────────
   RelationshipChange   56
-  MajorMemory          18
+  MajorMemory          20
   WorldDiscovery       10
   MissionOutcome       10
   Death                3

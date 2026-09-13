@@ -60,21 +60,34 @@ export function debuggerLines(ctx: RenderContext): string[] {
 }
 
 function narrate(ctx: RenderContext): string {
-  const { actor, decision } = ctx;
+  return narrateAction(ctx.actor, ctx.subject, ctx.decision);
+}
+
+/**
+ * 행동 한 줄. 화면(웹/Unity)과 텍스트 로그가 같은 문장을 쓰게 하기 위해 분리했다.
+ * 판단에서 나온 것만 읽는다 — 점수나 내부 수치는 보지 않는다.
+ */
+export function narrateAction(
+  actor: CharacterInstance,
+  subject: CharacterInstance,
+  decision: Decision,
+): string {
   const goalDriven = decision.reason.factors.some((f) => f.key === 'goal');
   const memoryDriven = decision.reason.factors.some((f) => f.key === 'memory');
 
   switch (decision.reason.action) {
     case 'RESCUE':
       if (goalDriven) {
-        return `${topic(actor.identity.name)} 두려움에도 몸이 먼저 움직였다. 다시는 그러지 않겠다고 정했기 때문이다.`;
+        const smoke = decision.plan?.steps.includes('SUPPRESS') === true;
+        return `${topic(actor.identity.name)} 두려움에도 몸이 먼저 움직였다. `
+          + `${smoke ? '교란기를 터뜨리고 들어갔다.' : '다시는 그러지 않겠다고 정했기 때문이다.'}`;
       }
-      return `${topic(actor.identity.name)} ${object(ctx.subject.identity.name)} 끌어내려 적 앞으로 들어갔다.`;
+      return `${topic(actor.identity.name)} ${object(subject.identity.name)} 끌어내려 적 앞으로 들어갔다.`;
     case 'RETREAT':
       if (memoryDriven) {
         return `${topic(actor.identity.name)} 또 물러섰다. 지난번의 상처가 발을 멈춰 세웠다.`;
       }
-      return `${topic(actor.identity.name)} ${object(ctx.subject.identity.name)} 두고 물러섰다.`;
+      return `${topic(actor.identity.name)} ${object(subject.identity.name)} 두고 물러섰다.`;
     case 'HOLD':
       return `${topic(actor.identity.name)} 자리를 지켰다. 명령이 그랬다.`;
     case 'ATTACK':

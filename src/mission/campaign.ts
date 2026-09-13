@@ -99,6 +99,42 @@ export interface CampaignResult {
   readonly echoes: readonly Echo[];
 }
 
+/**
+ * 캠프 회복 — **몸에만 일어난다. 기억과 목표는 남는다.**
+ *
+ * 이 한 줄이 게임의 명제다. 그래서 함수로 뽑아 자동 진행과 사람이 플레이하는 화면이
+ * 같은 것을 쓰게 한다. 두 곳에 쓰면 반드시 어긋난다.
+ */
+export function campRest(
+  roster: readonly CharacterInstance[],
+  camp: CampSettings = CAMP,
+): void {
+  for (const member of roster) {
+    if (member.status !== 'alive') continue;
+    member.needs.fatigue = Math.max(
+      0,
+      Math.round(member.needs.fatigue * (1 - camp.fatigueRecovered)),
+    );
+    member.needs.health = Math.min(
+      member.needs.maxHealth,
+      member.needs.health + Math.round(member.needs.maxHealth * camp.healthRecovered),
+    );
+    member.emotion.fear = Math.max(0, member.emotion.fear - camp.fearRecovered);
+  }
+}
+
+/** 빈 자리를 새 사람으로 채운다. 죽은 사람은 돌아오지 않는다 (규칙 7) */
+export function refillRoster(
+  world: World,
+  roster: CharacterInstance[],
+  camp: CampSettings = CAMP,
+): void {
+  while (roster.length < camp.partySize) {
+    const definition = roster.length % 2 === 0 ? VANGUARD : SCOUT;
+    roster.push(summon(world, definition.definitionId));
+  }
+}
+
 export function runCampaign(input: CampaignInput): CampaignResult {
   const { world, order, strategy, attempts } = input;
   const camp = { ...CAMP, ...input.camp };
@@ -114,24 +150,8 @@ export function runCampaign(input: CampaignInput): CampaignResult {
     roster = roster.filter((c) => c.status === 'alive');
     const returning = roster.length;
 
-    /* 캠프 — 회복은 몸에만 일어난다. 기억과 목표는 남는다 */
-    for (const member of roster) {
-      member.needs.fatigue = Math.max(
-        0,
-        Math.round(member.needs.fatigue * (1 - camp.fatigueRecovered)),
-      );
-      member.needs.health = Math.min(
-        member.needs.maxHealth,
-        member.needs.health + Math.round(member.needs.maxHealth * camp.healthRecovered),
-      );
-      member.emotion.fear = Math.max(0, member.emotion.fear - camp.fearRecovered);
-    }
-
-    /* 빈 자리를 새 사람으로 채운다. 죽은 사람은 돌아오지 않는다 (규칙 7) */
-    while (roster.length < camp.partySize) {
-      const definition = roster.length % 2 === 0 ? VANGUARD : SCOUT;
-      roster.push(summon(world, definition.definitionId));
-    }
+    campRest(roster, camp);
+    refillRoster(world, roster, camp);
 
     const veteransWithGoal = roster.filter((c) => c.goals.length > 0).length;
 

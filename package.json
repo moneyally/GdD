@@ -16,10 +16,12 @@
     "tower": "tsx src/cli/tower.ts",
     "tower:stats": "tsx src/cli/towerStats.ts",
     "golden": "tsx src/cli/golden.ts",
-    "gates:stats": "tsx src/cli/gateStats.ts"
+    "gates:stats": "tsx src/cli/gateStats.ts",
+    "prototype:build": "esbuild src/web/entry.ts --bundle --format=iife --global-name=LivingWorld --target=es2020 --outfile=prototype/engine.js --banner:js=\"/* 생성물 — 수정하지 말 것. 원본은 src/, 재생성은 npm run prototype:build */\""
   },
   "devDependencies": {
     "@types/node": "^22.20.2",
+    "esbuild": "^0.28.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"

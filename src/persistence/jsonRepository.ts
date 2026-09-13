@@ -8,7 +8,12 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import type { SnapshotRepository } from './repository.js';
+import { serialize } from './serialize.js';
 import { assertSnapshotVersion, type Snapshot } from './snapshot.js';
+
+// 직렬화는 `serialize.ts`에 있다 — 브라우저에서도 같은 바이트가 나와야 하므로
+// node:fs를 아는 이 파일에 둘 수 없다. 기존 import 경로는 유지한다.
+export { serialize };
 
 export class JsonSnapshotRepository implements SnapshotRepository {
   constructor(private readonly path: string) {}
@@ -30,19 +35,4 @@ export class JsonSnapshotRepository implements SnapshotRepository {
     assertSnapshotVersion(snapshot);
     return snapshot;
   }
-}
-
-/** 키 순서를 정렬해 결정론적 바이트를 만든다. */
-export function serialize(snapshot: Snapshot): string {
-  return JSON.stringify(snapshot, sortedReplacer, 2);
-}
-
-function sortedReplacer(_key: string, value: unknown): unknown {
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) return value;
-  const record = value as Record<string, unknown>;
-  const sorted: Record<string, unknown> = {};
-  for (const key of Object.keys(record).sort()) {
-    sorted[key] = record[key];
-  }
-  return sorted;
 }

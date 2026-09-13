@@ -173,109 +173,198 @@ export interface GateRunResult {
   readonly consumedEchoes: readonly Echo[];
 }
 
-export interface GateRunInput {
+export interface GateSessionInput {
   readonly world: World;
   readonly party: readonly InstanceId[];
   readonly order: MasterOrder;
-  readonly strategy: GateStrategy;
   /** 이전 등반들이 남긴 잔상 */
   readonly echoes?: readonly Echo[];
   readonly startingSupplies?: Supplies;
+}
+
+export interface GateRunInput extends GateSessionInput {
+  readonly strategy: GateStrategy;
 }
 
 export const DEFAULT_SUPPLIES: Readonly<Supplies> = {
   suppressor: 2, stabilizer: 2, sedative: 1,
 };
 
-export function runGateTower(input: GateRunInput): GateRunResult {
-  const { world, party, order, strategy } = input;
-  const supplies: Supplies = { ...(input.startingSupplies ?? DEFAULT_SUPPLIES) };
-  const echoes = [...(input.echoes ?? [])];
+/**
+ * 한 좌표씩 진행하는 등반.
+ *
+ * 왜 클래스인가: 사람이 플레이하는 화면은 "문 세 개를 보여주고 기다린다"가 필요하고,
+ * 밸런스 측정은 "전략 함수로 자동 진행"이 필요하다. 두 경로가 **같은 규칙**을 써야 하므로
+ * 규칙은 여기 한 번만 쓰고, `runGateTower`는 이 위에 전략을 얹은 껍데기다.
+ *
+ * 이전에는 프로토타입(HTML)이 판단 로직을 손으로 복사해 갖고 있었다. 그러면 측정한 것과
+ * 플레이하는 것이 다른 게임이 된다 — 이 클래스가 그 중복을 없애기 위해 존재한다.
+ *
+ * 사용:
+ * ```
+ * const session = new GateSession({ world, party, order });
+ * let ctx;
+ * while ((ctx = session.peek())) session.advance(chosenGate, allocation);
+ * const result = session.result();
+ * ```
+ */
+export class GateSession {
+  private readonly world: World;
+  private readonly party: readonly InstanceId[];
+  private order: MasterOrder;
+  private readonly supplies: Supplies;
+  private readonly echoes: Echo[];
 
-  const floors: GateFloorLog[] = [];
-  const deaths: InstanceId[] = [];
-  const gatesTaken: GateKey[] = [];
-  const newEchoes: Echo[] = [];
-  const consumedEchoes: Echo[] = [];
-  let pressure = 0;
-  let deepestDepth = 0;
-  let abortReason: GateRunResult['abortReason'];
+  private readonly floors: GateFloorLog[] = [];
+  private readonly deaths: InstanceId[] = [];
+  private readonly gatesTaken: GateKey[] = [];
+  private readonly newEchoes: Echo[] = [];
+  private readonly consumedEchoes: Echo[] = [];
 
-  for (let depth = 1; depth <= TOWER.floors; depth += 1) {
-    const living = party.map((id) => world.instance(id)).filter((c) => c.status === 'alive');
+  private pressure = 0;
+  private deepestDepth = 0;
+  private abortReason: GateRunResult['abortReason'];
+  private finished = false;
+  private pendingSuppressor: InstanceId | undefined;
 
-    if (living.length === 0) { abortReason = 'party_wiped'; break; }
-    if (living.length < TOWER.minPartyToContinue) { abortReason = 'too_few_to_continue'; break; }
-    const line = order.retreatCondition.healthRatioBelow;
+  constructor(input: GateSessionInput) {
+    this.world = input.world;
+    this.party = input.party;
+    this.order = input.order;
+    this.supplies = { ...(input.startingSupplies ?? DEFAULT_SUPPLIES) };
+    this.echoes = [...(input.echoes ?? [])];
+  }
+
+  /**
+   * 등반 중 명령 변경. Master가 할 수 있는 일이 문 선택뿐이면 게임이 얕다 —
+   * 퇴각선을 언제 올리고 내리는지가 두 번째 레버다.
+   *
+   * 자동 진행(`runGateTower`)은 이걸 호출하지 않으므로 측정 결과는 영향받지 않는다.
+   */
+  setOrder(order: MasterOrder): void {
+    this.order = order;
+  }
+
+  /**
+   * 교란기를 미리 지급한다 (사람이 플레이할 때). 즉시 재고에서 빠지고,
+   * 다음 `advance()` 한 번에만 유효하다.
+   *
+   * 자동 진행은 `Allocation`으로 같은 일을 한다 — 이쪽은 "누르면 카드에 표시가 붙는다"가
+   * 필요한 화면용 경로다.
+   */
+  giveSuppressor(target: InstanceId): boolean {
+    if (this.pendingSuppressor) this.clearSuppressor();
+    if (this.supplies.suppressor <= 0) return false;
+    const c = this.world.find(target);
+    if (!c || c.status !== 'alive') return false;
+    this.supplies.suppressor -= 1;
+    this.pendingSuppressor = target;
+    return true;
+  }
+
+  /** 지급 취소 — 재고를 돌려준다 */
+  clearSuppressor(): void {
+    if (!this.pendingSuppressor) return;
+    this.supplies.suppressor += 1;
+    this.pendingSuppressor = undefined;
+  }
+
+  suppressorHolder(): InstanceId | undefined {
+    return this.pendingSuppressor;
+  }
+
+  /**
+   * 안정제·억제제를 지금 쓴다.
+   *
+   * 자동 진행은 이 둘을 `advance()` 안에서 쓴다. 사람이 플레이할 때는 누른 즉시
+   * 체력 막대가 오르는 것이 필요하므로 적용 시점이 문 통과 **이전**이 된다 —
+   * 같은 수치, 같은 함수를 쓰지만 순서가 한 칸 앞이다.
+   */
+  useStabilizer(target: InstanceId): boolean {
+    const before = this.supplies.stabilizer;
+    applyStabilizer(this.supplies, { stabilizerTo: target }, this.world);
+    return this.supplies.stabilizer < before;
+  }
+
+  useSedative(target: InstanceId): boolean {
+    const before = this.supplies.sedative;
+    applySedative(this.supplies, { sedativeTo: target }, this.world);
+    return this.supplies.sedative < before;
+  }
+
+  /**
+   * 다음 좌표에서 Master가 보는 것. 등반이 끝났으면 undefined.
+   *
+   * 부작용은 "끝났다"는 판정을 기록하는 것뿐이고 멱등이다 — 화면이 매 프레임 불러도 된다.
+   * 세계는 건드리지 않는다 (tick도 올리지 않는다).
+   */
+  peek(): GateContext | undefined {
+    if (this.finished) return undefined;
+
+    const depth = this.deepestDepth + 1;
+    if (depth > TOWER.floors) { this.finished = true; return undefined; }
+
+    const living = this.living();
+    if (living.length === 0) { return this.stop('party_wiped'); }
+    if (living.length < TOWER.minPartyToContinue) { return this.stop('too_few_to_continue'); }
+    const line = this.order.retreatCondition.healthRatioBelow;
     if (line > 0 && living.every((c) => c.needs.health / c.needs.maxHealth < line)) {
-      abortReason = 'party_spent';
-      break;
+      return this.stop('party_spent');
     }
 
-    world.advanceTick();
-    deepestDepth = depth;
-
-    const known = world.events
-      .ofKind('WorldDiscovery')
-      .some((e) => e.what === floorKey(depth));
-    const echo = echoes.find((e) => e.depth === depth);
-    const baseThreat = TOWER.threatAt(depth) + (pressure + GATE_RULES.pressurePerDepth)
-      * GATE_RULES.threatFromPressure;
-
-    const ctx: GateContext = {
-      depth, baseThreat, pressure, supplies, living, echo, known,
+    return {
+      depth,
+      baseThreat: TOWER.threatAt(depth)
+        + (this.pressure + GATE_RULES.pressurePerDepth) * GATE_RULES.threatFromPressure,
+      pressure: this.pressure,
+      supplies: this.supplies,
+      living,
+      echo: this.echoes.find((e) => e.depth === depth),
+      known: this.world.events.ofKind('WorldDiscovery').some((e) => e.what === floorKey(depth)),
     };
+  }
 
-    /* 1. 문 선택 — Master의 결정 */
-    const gateKey = strategy.chooseGate(ctx);
+  /** 고른 문으로 한 좌표 진행한다. `peek()`이 undefined를 주면 호출해선 안 된다. */
+  advance(gateKey: GateKey, allocation: Allocation = {}): GateFloorLog {
+    const ctx = this.peek();
+    if (!ctx) throw new Error('등반이 이미 끝났다');
+
+    const { world, order } = this;
     const gate = GATES[gateKey];
-    gatesTaken.push(gateKey);
 
-    pressure += GATE_RULES.pressurePerDepth + gate.extraPressure;
+    world.advanceTick();
+    this.deepestDepth = ctx.depth;
+    this.gatesTaken.push(gateKey);
+
+    this.pressure += GATE_RULES.pressurePerDepth + gate.extraPressure;
     const threat = Math.max(5, Math.round(
-      TOWER.threatAt(depth) + pressure * GATE_RULES.threatFromPressure + gate.threat,
+      TOWER.threatAt(ctx.depth) + this.pressure * GATE_RULES.threatFromPressure + gate.threat,
     ));
 
     if (gate.fatigue > 0) {
-      for (const c of living) {
+      for (const c of ctx.living) {
         c.needs.fatigue = Math.min(100, c.needs.fatigue + gate.fatigue);
       }
     }
 
-    /* 2. 보급 배분 — Master의 결정 */
-    const allocation = strategy.allocate(ctx);
-    const suppressorHolder = spendSuppressor(supplies, allocation, living);
-    applyStabilizer(supplies, allocation, world);
-    applySedative(supplies, allocation, world);
+    /* 보급 배분 — Master의 결정 */
+    const suppressorHolder = this.takePendingSuppressor(ctx.living)
+      ?? spendSuppressor(this.supplies, allocation, ctx.living);
+    applyStabilizer(this.supplies, allocation, world);
+    applySedative(this.supplies, allocation, world);
 
-    /* 3. 좌표 기록과 잔상 */
+    /* 좌표 기록과 잔상 */
     const arrival = runTransaction(world, ReachFloorTransaction, {
-      floor: depth,
-      by: living[0]!.instanceId,
+      floor: ctx.depth,
+      by: ctx.living[0]!.instanceId,
     });
     if (!arrival.ok) throw new Error(arrival.error);
 
-    let echoNote: string | undefined;
-    if (echo) {
-      if (gate.recoversEcho) {
-        supplies[echo.grants] = Math.min(GATE_RULES.supplyCap, supplies[echo.grants] + 1);
-        for (const c of living) {
-          c.emotion.fear = Math.max(0, c.emotion.fear - GATE_RULES.echoRelief);
-        }
-        echoes.splice(echoes.indexOf(echo), 1);
-        consumedEchoes.push(echo);
-        echoNote = `${echo.name}의 잔상을 회수했다`;
-      } else {
-        for (const c of living) {
-          c.emotion.fear = Math.min(100, c.emotion.fear + GATE_RULES.echoFear);
-        }
-        echoNote = `${echo.name}의 이름이 벽면에 떠 있다`;
-      }
-    }
+    const echoNote = this.settleEcho(ctx, gate);
 
-    /* 4. 조우 */
-    const fallen = pickFallen(world, living);
-    const others = living.filter((c) => c.instanceId !== fallen.instanceId);
+    /* 조우 */
+    const fallen = pickFallen(world, ctx.living);
+    const others = ctx.living.filter((c) => c.instanceId !== fallen.instanceId);
     const situation = allyDown(fallen.instanceId, threat, world.tick);
 
     const decisions: ActorDecision[] = [];
@@ -296,25 +385,33 @@ export function runGateTower(input: GateRunInput): GateRunResult {
 
     for (const id of resolved.value.died) {
       const victim = world.instance(id);
-      if (!echoes.some((e) => e.depth === depth) && !newEchoes.some((e) => e.depth === depth)) {
-        newEchoes.push({
-          depth,
+      const taken = this.echoes.some((e) => e.depth === ctx.depth)
+        || this.newEchoes.some((e) => e.depth === ctx.depth);
+      if (!taken) {
+        this.newEchoes.push({
+          depth: ctx.depth,
           name: victim.identity.name,
           grants: world.rng.next() < 0.5 ? 'suppressor' : 'stabilizer',
         });
       }
     }
-    deaths.push(...resolved.value.died);
+    this.deaths.push(...resolved.value.died);
 
-    /* 5. 보급 — 심층문은 확실히 준다 */
+    /* 보급 — 심층문은 확실히 준다 */
     let supplyGained: SupplyKind | undefined;
     if (gate.supply) {
       supplyGained = world.rng.next() < 0.5 ? 'suppressor' : 'stabilizer';
-      supplies[supplyGained] = Math.min(GATE_RULES.supplyCap, supplies[supplyGained] + 1);
+      this.supplies[supplyGained] = Math.min(
+        GATE_RULES.supplyCap, this.supplies[supplyGained] + 1,
+      );
     }
 
-    floors.push({
-      depth, gate: gateKey, threat, pressure, fallen,
+    const log: GateFloorLog = {
+      depth: ctx.depth,
+      gate: gateKey,
+      threat,
+      pressure: this.pressure,
+      fallen,
       decisions: others.map((actor) => ({
         actor,
         decision: byActor.get(actor.instanceId)!,
@@ -326,25 +423,85 @@ export function runGateTower(input: GateRunInput): GateRunResult {
       firstVisit: arrival.value,
       echoNote,
       supplyGained,
-    });
+    };
+    this.floors.push(log);
 
-    rest(world, party);
+    rest(world, this.party);
+    return log;
   }
 
-  const survivors = party.filter((id) => world.instance(id).status === 'alive');
+  result(): GateRunResult {
+    return {
+      deepestDepth: this.deepestDepth,
+      cleared: this.deepestDepth === TOWER.floors && this.abortReason === undefined,
+      floors: this.floors,
+      deaths: this.deaths,
+      survivors: this.party.filter((id) => this.world.instance(id).status === 'alive'),
+      abortReason: this.abortReason,
+      gatesTaken: this.gatesTaken,
+      finalPressure: this.pressure,
+      newEchoes: this.newEchoes,
+      consumedEchoes: this.consumedEchoes,
+    };
+  }
 
-  return {
-    deepestDepth,
-    cleared: deepestDepth === TOWER.floors && abortReason === undefined,
-    floors,
-    deaths,
-    survivors,
-    abortReason,
-    gatesTaken,
-    finalPressure: pressure,
-    newEchoes,
-    consumedEchoes,
-  };
+  /** 현재 보급 — 화면 표시용. 복사해서 준다 */
+  currentSupplies(): Readonly<Supplies> {
+    return { ...this.supplies };
+  }
+
+  private living(): CharacterInstance[] {
+    return this.party
+      .map((id) => this.world.instance(id))
+      .filter((c) => c.status === 'alive');
+  }
+
+  /** 미리 지급된 교란기를 이번 좌표에 쓴다. 이미 재고에서 빠져 있으므로 다시 빼지 않는다 */
+  private takePendingSuppressor(living: readonly CharacterInstance[]): InstanceId | undefined {
+    const target = this.pendingSuppressor;
+    this.pendingSuppressor = undefined;
+    if (!target) return undefined;
+    return living.some((c) => c.instanceId === target) ? target : undefined;
+  }
+
+  private stop(reason: NonNullable<GateRunResult['abortReason']>): undefined {
+    this.abortReason = reason;
+    this.finished = true;
+    return undefined;
+  }
+
+  private settleEcho(ctx: GateContext, gate: GateSpec): string | undefined {
+    const echo = ctx.echo;
+    if (!echo) return undefined;
+
+    if (!gate.recoversEcho) {
+      for (const c of ctx.living) {
+        c.emotion.fear = Math.min(100, c.emotion.fear + GATE_RULES.echoFear);
+      }
+      return `${echo.name}의 이름이 벽면에 떠 있다`;
+    }
+
+    this.supplies[echo.grants] = Math.min(
+      GATE_RULES.supplyCap, this.supplies[echo.grants] + 1,
+    );
+    for (const c of ctx.living) {
+      c.emotion.fear = Math.max(0, c.emotion.fear - GATE_RULES.echoRelief);
+    }
+    this.echoes.splice(this.echoes.indexOf(echo), 1);
+    this.consumedEchoes.push(echo);
+    return `${echo.name}의 잔상을 회수했다`;
+  }
+}
+
+/** 전략을 얹어 끝까지 자동 진행한다. 밸런스 측정과 테스트가 쓰는 경로. */
+export function runGateTower(input: GateRunInput): GateRunResult {
+  const session = new GateSession(input);
+  let ctx = session.peek();
+  while (ctx) {
+    session.advance(input.strategy.chooseGate(ctx), input.strategy.allocate(ctx));
+    ctx = session.peek();
+  }
+  return session.result();
 }
 
 /**

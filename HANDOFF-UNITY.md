@@ -12,7 +12,7 @@
 
 기획 문서(GDD v3.0)를 마크다운 레포로 정리했고, **판단 엔진이 실제로 돌아간다.**
 캐릭터가 자기 공포·신뢰·기억으로 판단하고, 그 판단이 세계에 사건을 남기고, 그 사건이
-다음 판단을 바꾼다 — 이걸 테스트로 고정해뒀다. TypeScript 83개 + C# 32개 통과.
+다음 판단을 바꾼다 — 이걸 테스트로 고정해뒀다. TypeScript 86개 + C# 32개 통과.
 **세이브 파일은 두 언어가 바이트 단위로 같은 것을 쓴다** — 웹에서 만든 세이브를 Unity가 그대로 연다.
 **아직 없는 것은 게임 엔진, 3D, 그리고 "재미있는가"에 대한 답이다.**
 
@@ -22,7 +22,7 @@
 | 판단 엔진 (TypeScript, 원본) | `src/` — `npm run check` |
 | 판단 엔진 (C#, Unity용) | `unity/LivingWorld.Core/` — 골든 대조로 검증됨 |
 | Unity 브리지 (MonoBehaviour) | `unity/LivingWorld.Unity/` |
-| 웹 프로토타입 (차원문 서바이벌) | `prototype/holo-gates.html` (아티팩트로도 배포됨) |
+| 웹 프로토타입 (차원문 서바이벌) | `prototype/` — **레포의 엔진을 번들해서 돌린다**. 화면에 규칙 0줄 |
 | 세이브 (저장/복원) | `src/persistence/` · `unity/LivingWorld.Core/Persistence/` · `unity/LivingWorld.Unity/SaveFile.cs` |
 | 설계 결정 기록 | `CORE.md`, `docs/proposal/holo-gates.md`, `OPEN-QUESTIONS.md` |
 
@@ -168,12 +168,13 @@ Claude에게 주면 원격 MCP 서버로 붙일 수 있다.
 ```bash
 # TypeScript (원본 구현)
 npm install
-npm run check          # 타입 검사 + 테스트 83개
+npm run check          # 타입 검사 + 테스트 86개
 npm run tower          # 탑 등반 로그
 npm run tower:stats    # 명령별 결과 분포 (밸런스 도구)
 npm run compare        # 판단 비교표
 npm run gates:stats    # 차원문 전략별 결과 분포 + 캠페인 효과 측정
 npm run golden         # C# 대조용 정답지 재생성
+npm run prototype:build  # 웹 프로토타입 엔진 번들 재생성 (규칙을 바꿨으면 필수)
 
 # C# (Unity용)
 cd unity

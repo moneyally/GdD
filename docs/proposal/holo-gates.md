@@ -80,7 +80,9 @@
 
 ## 구현 상태
 
-- 웹 프로토타입: `prototype/holo-gates.html` (아티팩트로도 배포)
+- 웹 프로토타입: `prototype/holo-gates.html` + `engine.js` (아티팩트로도 배포).
+  **화면은 규칙을 갖지 않는다** — `src/web/api.ts`를 번들해서 이 문서의 수치를 그대로 돌린다.
+  즉 여기 적힌 측정값과 사람이 눌러보는 게임이 같은 코드다
 - 엔진: `src/mission/gates.ts` — 문 3종 / 위상압 / 유한 보급 / 잔상 구현 완료
 - 캠페인: `src/mission/campaign.ts` — 여러 등반과 그 사이 캠프
 - 측정 도구: `npm run gates:stats`

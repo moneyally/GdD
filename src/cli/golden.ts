@@ -19,7 +19,7 @@ import { SCOUT } from '../data/definitions.js';
 import { formatReason } from '../decision/reason.js';
 import { Rng } from '../core/rng.js';
 import { takeSnapshot } from '../persistence/snapshot.js';
-import { serialize } from '../persistence/jsonRepository.js';
+import { serialize } from '../persistence/serialize.js';
 
 const OUT_DIR = 'golden';
 

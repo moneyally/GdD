@@ -13,7 +13,9 @@ npm run demo      # 4명 시나리오 텍스트 로그 (샘플: docs/logs/core-g
 npm run compare   # 판단 비교표 (샘플: docs/logs/decision-comparison.md)
 npm run tower     # 탑 10층 등반 (샘플: docs/logs/tower-climb-sample.txt)
 npm run tower:stats  # 명령별 결과 분포 (샘플: docs/logs/tower-balance.txt)
-npm run check     # 타입 검사 + 테스트 83개
+npm run gates:stats  # 차원문 전략별 결과 분포 (샘플: docs/logs/gate-balance.txt)
+npm run prototype:build  # 웹 프로토타입이 쓰는 엔진 번들 재생성
+npm run check     # 타입 검사 + 테스트 86개
 ```
 
 스택: TypeScript (strict) / Node 22 / vitest. 엔진·렌더러·서버·LLM 없음.
@@ -54,7 +56,7 @@ npm run check     # 타입 검사 + 테스트 83개
 
 ```
 RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,source=MEM_0018 overrides fear=72)
-       도하는 두려움에도 몸이 먼저 움직였다. 다시는 그러지 않겠다고 정했기 때문이다.
+       도하는 두려움에도 몸이 먼저 움직였다. 교란기를 터뜨리고 들어갔다.
 ```
 
 이 한 줄이 증명 대상이다. 공포는 여전히 높은데(72) 행동이 반대로 나왔고,
@@ -141,8 +143,9 @@ src/
 ├── sim/resolve.ts           조우 결과 — 여러 명의 판단 → 사건 → 죽음 → 기억 → 목표
 ├── mission/tower.ts         탑 10층 + 파티 편성 + 층 도달 기록
 ├── transactions/summon.ts   소환
-├── persistence/             Snapshot + Repository 인터페이스 + JSON 구현
+├── persistence/             Snapshot + 결정론적 직렬화 + Repository/JSON 구현
 ├── log/                     텍스트 렌더러 (판단 함수 호출 금지) + 조사 처리
+├── web/api.ts               웹 화면용 파사드 — 뷰 모델만 내보낸다 (규칙은 화면에 두지 않는다)
 ├── scenario/                coreGameplay (증명) / towerRun (등반)
 ├── data/definitions.ts      Definition 2개
 └── cli/                     demo / compare / tower / towerStats / gateStats / golden / verifyRestore

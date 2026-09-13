@@ -64,7 +64,7 @@
     utility  RETREAT=65.6  RESCUE=46.5  HOLD=36.2  ATTACK=12.5
 
 [tick 2] 도하 — RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,source=MEM_0018 overrides fear=72)
-            도하는 두려움에도 몸이 먼저 움직였다. 다시는 그러지 않겠다고 정했기 때문이다.
+            도하는 두려움에도 몸이 먼저 움직였다. 교란기를 터뜨리고 들어갔다.
   도하 [CHR_0004] layer=L2  (판단 시점 State)
     reason   RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,source=MEM_0018 overrides fear=72)
     state    health_ratio=1.00 fear=72 trust=0 self_risk=70
@@ -73,7 +73,7 @@
     utility  (L0에서 결정되어 계산하지 않음)
 
 [tick 2] 유진 — RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,source=MEM_0023 overrides fear=72)
-            유진은 두려움에도 몸이 먼저 움직였다. 다시는 그러지 않겠다고 정했기 때문이다.
+            유진은 두려움에도 몸이 먼저 움직였다. 교란기를 터뜨리고 들어갔다.
   유진 [CHR_0007] layer=L2  (판단 시점 State)
     reason   RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,source=MEM_0023 overrides fear=72)
     state    health_ratio=1.00 fear=72 trust=0 self_risk=70
