@@ -1,0 +1,891 @@
+<title>탑은 기억한다</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/*
+  단일 비주얼: 홀로그램 투영. Master는 탑 안에 없고, 투영을 보며 명령한다.
+  한 세계에 커밋하되 모든 색을 명시한다 — 뷰어 테마에 기대지 않는다.
+*/
+:root{
+  --void:#05080d;
+  --void-2:#0a0f17;
+  --panel:rgba(79,214,232,.045);
+  --line:rgba(79,214,232,.20);
+  --line-2:rgba(79,214,232,.10);
+
+  --holo:#4fd6e8;          /* 투영 기본 */
+  --holo-dim:#7f9dab;      /* 보조 텍스트 */
+  --holo-faint:#4e6270;    /* 3차 */
+  --holo-bright:#dcf1f6;   /* 본문 */
+
+  --record:#e0a34a;        /* 기록·잔상 */
+  --warp:#c86aa8;          /* 위상 뒤틀림 */
+  --danger:#e8594a;        /* 위험·사망 */
+  --safe:#63c9a0;          /* 생존·구조 */
+
+  --f-title:"Black Han Sans","IBM Plex Sans KR",sans-serif;
+  --f-body:"IBM Plex Sans KR","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--void)}
+body{
+  margin:0;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(79,214,232,.07), transparent 60%),
+    linear-gradient(180deg,var(--void-2),var(--void) 40%);
+  color:var(--holo-bright);
+  font-family:var(--f-body);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:18px;padding-block:30px 60px}
+
+/* ── 계기판 ─────────────────────────────────── */
+.hud{
+  display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;
+  border:1px solid var(--line);background:var(--panel);border-radius:2px;
+  padding:12px 16px;font-family:var(--f-mono);font-size:12px
+}
+.gauge{display:flex;align-items:baseline;gap:8px}
+.gauge i{font-style:normal;color:var(--holo-faint);letter-spacing:.14em;font-size:10px;text-transform:uppercase}
+.gauge b{font-weight:500;font-size:15px;color:var(--holo);font-variant-numeric:tabular-nums}
+.gauge.warn b{color:var(--danger)}
+.pressure{flex:1;min-width:130px;display:flex;align-items:center;gap:9px}
+.pbar{flex:1;height:3px;background:rgba(79,214,232,.14);position:relative;overflow:hidden}
+.pbar span{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--holo),var(--danger));
+  transition:width .5s ease}
+.kit{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.kititem{display:flex;align-items:center;gap:6px;color:var(--holo-dim)}
+.pip{display:flex;gap:3px}
+.pip u{width:6px;height:6px;border:1px solid var(--line);border-radius:50%;text-decoration:none;display:block}
+.pip u.on{background:var(--holo);border-color:var(--holo);box-shadow:0 0 6px rgba(79,214,232,.7)}
+
+/* ── 머리 ───────────────────────────────────── */
+header{margin-top:30px}
+.eyebrow{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--holo);margin:0 0 8px;opacity:.85}
+h1{font-family:var(--f-title);font-size:clamp(34px,7vw,62px);line-height:.98;margin:0;
+  letter-spacing:.01em;
+  background:linear-gradient(180deg,#eaf8fb,#5fb8cb);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 22px rgba(79,214,232,.28))}
+.sub{color:var(--holo-dim);margin:12px 0 0;max-width:60ch;font-size:14.5px}
+.sub b{color:var(--holo-bright);font-weight:600}
+
+/* ── 문 ─────────────────────────────────────── */
+.stage{margin-top:26px}
+.stagehead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin-bottom:14px}
+.stagehead h2{font-family:var(--f-body);font-weight:600;font-size:17px;margin:0}
+.stagehead .note{font-family:var(--f-mono);font-size:11px;color:var(--holo-faint)}
+.gates{display:grid;grid-template-columns:repeat(auto-fit,minmax(216px,1fr));gap:13px}
+.gate{
+  position:relative;border:1px solid var(--line);background:
+    radial-gradient(80% 60% at 50% 0%,rgba(79,214,232,.09),transparent 70%);
+  border-radius:2px;padding:16px 15px 15px;cursor:pointer;text-align:left;
+  color:var(--holo-bright);font-family:var(--f-body);font-size:14px;
+  display:flex;flex-direction:column;gap:11px;transition:border-color .25s,transform .25s,background .25s
+}
+.gate:hover:not(:disabled){border-color:var(--holo);transform:translateY(-2px)}
+.gate:disabled{opacity:.4;cursor:not-allowed}
+.gate:focus-visible{outline:2px solid var(--holo);outline-offset:3px}
+.gate .ring{align-self:center;width:86px;height:86px;position:relative}
+.gate .ring svg{width:100%;height:100%;display:block;overflow:visible}
+.gate .gname{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  text-align:center}
+.gate .gko{font-family:var(--f-title);font-size:21px;text-align:center;line-height:1;letter-spacing:.02em}
+.gate .rows{display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--line-2);padding-top:10px}
+.gate .r{display:flex;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:11.5px;
+  color:var(--holo-dim)}
+.gate .r b{font-weight:500;color:var(--holo-bright);font-variant-numeric:tabular-nums}
+.gate .r b.bad{color:var(--danger)}
+.gate .r b.good{color:var(--safe)}
+.gate .r b.rec{color:var(--record)}
+.gate.aligned .gko{color:var(--holo)}
+.gate.warped .gko{color:var(--warp)}
+.gate.deep .gko{color:var(--record)}
+.spin{animation:spin 14s linear infinite;transform-origin:50% 50%}
+.spin.rev{animation-duration:22s;animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+
+/* ── 보급 배분 ────────────────────────────────── */
+.kitpanel{margin-top:14px;border:1px solid var(--line-2);border-radius:2px;padding:13px 15px;
+  background:rgba(79,214,232,.025)}
+.kitrow{display:grid;grid-template-columns:9.5em 1fr;gap:8px 12px;align-items:center;padding:6px 0}
+.kitrow+.kitrow{border-top:1px solid var(--line-2)}
+.kitname{font-family:var(--f-mono);font-size:11.5px;color:var(--holo-dim);display:flex;
+  align-items:center;gap:7px}
+.give{display:flex;gap:6px;flex-wrap:wrap}
+.give button{
+  font-family:var(--f-body);font-size:12.5px;padding:4px 11px;border-radius:2px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--holo-dim)
+}
+.give button:hover:not(:disabled){border-color:var(--holo);color:var(--holo-bright)}
+.give button:disabled{opacity:.3;cursor:not-allowed}
+.give button.held{border-color:var(--holo);background:rgba(79,214,232,.14);color:var(--holo-bright)}
+.give button:focus-visible{outline:2px solid var(--holo);outline-offset:2px}
+.kithelp{font-family:var(--f-mono);font-size:10.5px;color:var(--holo-faint);margin:9px 0 0}
+
+/* ── 명령 ───────────────────────────────────── */
+.orders{display:flex;flex-wrap:wrap;gap:16px 26px;align-items:flex-end;margin-top:14px}
+.field{display:flex;flex-direction:column;gap:7px}
+.flabel{font-family:var(--f-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--holo-faint)}
+.seg{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.seg button{font-family:var(--f-body);font-size:12.5px;color:var(--holo-dim);background:transparent;
+  border:0;border-right:1px solid var(--line);padding:6px 12px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--holo);color:#04222a;font-weight:600}
+.seg button:focus-visible,input:focus-visible,.btn:focus-visible{outline:2px solid var(--holo);outline-offset:2px}
+.slider{display:flex;align-items:center;gap:10px}
+input[type=range]{width:120px;accent-color:var(--holo);background:transparent}
+.sval{font-family:var(--f-mono);font-size:12.5px;min-width:3.4em;color:var(--holo-bright);
+  font-variant-numeric:tabular-nums}
+.btn{font-family:var(--f-body);font-size:13px;font-weight:600;cursor:pointer;padding:8px 15px;
+  border-radius:2px;border:1px solid var(--line);background:transparent;color:var(--holo-bright)}
+.btn:hover{border-color:var(--holo)}
+.btn.ghost{color:var(--holo-dim)}
+
+/* ── 파티 ───────────────────────────────────── */
+h3.sec{font-family:var(--f-body);font-weight:600;font-size:16px;margin:34px 0 12px;
+  display:flex;align-items:baseline;gap:10px}
+h3.sec span{font-family:var(--f-mono);font-size:10.5px;color:var(--holo-faint);letter-spacing:.1em}
+.party{display:grid;grid-template-columns:repeat(auto-fit,minmax(186px,1fr));gap:11px}
+.unit{border:1px solid var(--line-2);background:var(--panel);border-radius:2px;padding:12px 13px;
+  display:flex;flex-direction:column;gap:9px;transition:border-color .3s,opacity .4s}
+.unit.holding{border-color:var(--holo)}
+.unit.gone{opacity:.35;border-color:rgba(232,89,74,.3)}
+.uhead{display:flex;align-items:baseline;gap:7px;min-width:0}
+.uhead strong{font-family:var(--f-title);font-size:19px;letter-spacing:.02em;line-height:1}
+.uhead em{font-style:normal;font-family:var(--f-mono);font-size:9.5px;color:var(--holo-faint);
+  letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat{display:grid;grid-template-columns:2.5em 1fr 2.3em;gap:7px;align-items:center}
+.stat i{font-style:normal;font-family:var(--f-mono);font-size:9.5px;color:var(--holo-faint)}
+.stat .t{height:3px;background:rgba(79,214,232,.13);overflow:hidden}
+.stat .t span{display:block;height:100%;transition:width .45s ease}
+.stat b{font-family:var(--f-mono);font-size:11px;font-weight:400;color:var(--holo-dim);text-align:right;
+  font-variant-numeric:tabular-nums}
+.marks{display:flex;flex-wrap:wrap;gap:4px;min-height:18px}
+.mk{font-family:var(--f-mono);font-size:9px;letter-spacing:.04em;padding:2px 6px;border:1px solid;
+  white-space:nowrap}
+.mk.m{color:var(--holo-faint);border-color:var(--line-2)}
+.mk.g{color:var(--record);border-color:rgba(224,163,74,.4);background:rgba(224,163,74,.08)}
+.mk.d{color:var(--danger);border-color:rgba(232,89,74,.4)}
+.mk.k{color:var(--holo);border-color:var(--line)}
+
+/* ── 관측 ───────────────────────────────────── */
+.obs{display:flex;flex-direction:column}
+.depth{border-top:1px solid var(--line-2);padding:15px 0;display:grid;
+  grid-template-columns:72px 1fr;gap:0 18px}
+.depth:first-child{border-top:0}
+.dnum{font-family:var(--f-title);font-size:30px;line-height:.9;color:var(--holo)}
+.dnum em{display:block;font-style:normal;font-family:var(--f-mono);font-size:9.5px;font-weight:400;
+  color:var(--holo-faint);letter-spacing:.1em;margin-top:6px}
+.dhead{display:flex;flex-wrap:wrap;gap:7px 10px;align-items:baseline;margin-bottom:10px}
+.dhead .gk{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;padding:1px 7px;
+  border:1px solid var(--line);color:var(--holo-dim)}
+.dhead .fall{font-size:15px}
+.dhead .echo{font-family:var(--f-mono);font-size:10px;color:var(--record);
+  border:1px solid rgba(224,163,74,.4);padding:1px 7px}
+.row{display:grid;grid-template-columns:4.4em 1fr;gap:2px 12px;padding:6px 0;
+  border-top:1px dotted rgba(79,214,232,.10)}
+.row:first-of-type{border-top:0}
+.row .rn{font-family:var(--f-title);font-size:15px;letter-spacing:.02em;padding-top:2px}
+.row .rs{font-size:13.5px}
+.row .rs u{text-decoration:none;font-family:var(--f-mono);font-size:11.5px;color:var(--holo-faint)}
+.row .rs u.kill{color:var(--danger)}
+.row .rc{grid-column:2;font-family:var(--f-mono);font-size:10.5px;color:var(--holo-faint);
+  line-height:1.5;word-break:break-word}
+.row .rc b{font-weight:500;color:var(--warp)}
+.seal{margin-top:10px;display:flex;gap:8px;align-items:baseline;font-size:14px}
+.seal .m{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em}
+.seal.ok{color:var(--safe)}
+.seal.no{color:var(--danger)}
+
+/* ── 결과 ───────────────────────────────────── */
+.final{margin-top:24px;border:1px solid var(--line);background:var(--panel);border-radius:2px;
+  padding:18px 20px}
+.final h4{font-family:var(--f-title);font-size:24px;margin:0 0 10px;letter-spacing:.02em}
+.final.win h4{color:var(--holo)}
+.final.lose h4{color:var(--danger)}
+.frow{display:flex;flex-wrap:wrap;gap:5px 24px;font-size:14px}
+.frow div{display:flex;gap:8px}
+.frow i{font-style:normal;font-family:var(--f-mono);font-size:10px;color:var(--holo-faint);
+  letter-spacing:.1em;padding-top:4px}
+.again{margin-top:14px}
+
+/* ── 기록 ───────────────────────────────────── */
+.ledger{margin-top:38px;border-top:1px solid var(--line-2);padding-top:20px}
+.coords{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.co{font-family:var(--f-mono);font-size:10.5px;width:30px;height:30px;display:grid;place-items:center;
+  border:1px solid var(--line-2);color:var(--holo-faint);position:relative}
+.co.seen{color:var(--holo);border-color:var(--line)}
+.co.echo{color:var(--record);border-color:rgba(224,163,74,.5);background:rgba(224,163,74,.09)}
+.hist{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.hi{display:grid;grid-template-columns:3.4em 5.6em 1fr;gap:12px;font-size:13px;align-items:baseline}
+.hi .a{font-family:var(--f-mono);font-size:10.5px;color:var(--holo-faint)}
+.hi .b{font-family:var(--f-mono);font-size:12px;color:var(--holo-bright);font-variant-numeric:tabular-nums}
+.hi .c{color:var(--holo-dim)}
+.none{color:var(--holo-faint);font-size:13px}
+footer{margin-top:40px;border-top:1px solid var(--line-2);padding-top:16px;color:var(--holo-faint);
+  font-size:12px}
+footer code{font-family:var(--f-mono);color:var(--holo-dim)}
+@media (max-width:560px){
+  .depth{grid-template-columns:1fr;gap:8px}
+  .dnum{display:flex;align-items:baseline;gap:9px}
+  .dnum em{margin:0}
+  .row{grid-template-columns:1fr}
+  .row .rc{grid-column:1}
+  .kitrow{grid-template-columns:1fr}
+}
+</style>
+
+<div class="wrap">
+
+<div class="hud">
+  <div class="gauge"><i>좌표</i><b id="g-depth">0 / 10</b></div>
+  <div class="gauge" id="g-press-wrap"><i>위상압</i><b id="g-press">0</b></div>
+  <div class="pressure"><div class="pbar"><span id="pbar" style="width:0%"></span></div></div>
+  <div class="kit">
+    <div class="kititem"><span>교란기</span><span class="pip" id="k-smoke"></span></div>
+    <div class="kititem"><span>안정제</span><span class="pip" id="k-heal"></span></div>
+    <div class="kititem"><span>억제제</span><span class="pip" id="k-calm"></span></div>
+  </div>
+</div>
+
+<header>
+  <p class="eyebrow">Living World · 차원문 등반 프로토타입</p>
+  <h1>탑은 기억한다</h1>
+  <p class="sub">
+    탑은 계단이 아니다. 매 좌표마다 <b>문 세 개</b>가 떠오르고, 당신은 어디로 보낼지만 정한다.
+    안에서 무슨 선택을 할지는 <b>그들이 정한다</b> — 자기 공포·신뢰·기억으로.
+    회색 줄이 그 판단의 실제 근거다.
+  </p>
+</header>
+
+<section class="stage" id="stage"></section>
+
+<h3 class="sec">파티 <span id="p-note"></span></h3>
+<div class="party" id="party"></div>
+
+<h3 class="sec">관측 기록 <span id="o-note"></span></h3>
+<div class="obs" id="obs"></div>
+<div id="final"></div>
+
+<section class="ledger">
+  <h3 class="sec" style="margin-top:0">탑의 기억 <span>이전 등반자들이 남긴 좌표와 잔상</span></h3>
+  <div class="coords" id="coords"></div>
+  <div class="hist" id="hist"></div>
+</section>
+
+<footer>
+  판단은 <code>L0</code> 하드 규칙 → <code>L2</code> 계획(GOAP) → <code>L1</code> 효용 비교 순서로 결정된다.
+  레포의 <code>src/decision/</code>과 같은 공식을 쓰며 LLM은 한 번도 호출하지 않는다.
+  잔상과 좌표 기록은 이 브라우저에 남는다.
+</footer>
+</div>
+
+<script>
+"use strict";
+
+/* ═══ 난수 ═══ */
+function rng(seed){
+  let s = seed >>> 0;
+  const f = () => {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  f.int = (a,b) => a + Math.floor(f() * (b - a + 1));
+  f.pick = xs => xs[f.int(0, xs.length - 1)];
+  return f;
+}
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+const jong = w => { const c=(w||"").trim().slice(-1).charCodeAt(0);
+  return c>=0xac00&&c<=0xd7a3 ? (c-0xac00)%28!==0 : false; };
+const eun = w => w + (jong(w)?"은":"는");
+const eul = w => w + (jong(w)?"을":"를");
+const iga = w => w + (jong(w)?"이":"가");
+
+/* ═══ 규칙 상수 (src/와 동일) ═══ */
+const RULE = {
+  depths:10, baseThreat:d => 20 + d*5, pressPerDepth:5, pressWarp:8, threatFromPress:.4,
+  restHeal:.12, restFear:4, minParty:2,
+  dmg:.7, rescuedTrust:18, rescuerTrust:8, fearGain:.5, fearDecay:8,
+  abandonImp:90, goalPri:85, rescueImp:55, woundImp:45, fatigue:6, reinforce:3,
+  suppress:30, echoFear:8, echoRelief:5, healAmount:.30, calmAmount:40, calmFatigue:15,
+};
+const W = {
+  rescue:{trust:.9,calm:.6,selfRisk:-.8,loy:.3,risk:.2,
+    mem:{rescued_ally:.2,wounded_in_rescue:-.25,ally_died_unrescued:.5}},
+  retreat:{fear:.9,selfRisk:.7,trust:-.5,loy:-.3,
+    mem:{wounded_in_rescue:.3,ally_died_unrescued:-.3}},
+  hold:{base:40,loy:.2,fear:-.2},
+  attack:{aggr:.7,calm:.4,selfRisk:-.6},
+};
+const appetite = p => p==="cautious"?-15 : p==="aggressive"?15 : 0;
+
+const GATES = {
+  aligned:{ ko:"정렬문", en:"ALIGNED", threat:0, press:0, supply:false, echo:false,
+    desc:"위상이 맞물려 있다. 예측한 그대로다." },
+  warped:{ ko:"뒤틀린문", en:"WARPED", threat:-15, press:RULE.pressWarp, fatigue:10,
+    supply:false, echo:true, desc:"좌표가 어긋난다. 위험은 낮고 잔상이 남아 있다." },
+  deep:{ ko:"심층문", en:"DEEP", threat:15, press:0, supply:true, echo:false,
+    desc:"더 깊은 좌표로 곧장 이어진다. 보급이 있다." },
+};
+
+const DEFS = {
+  vanguard:{ id:"CHD_vanguard", label:"선봉", names:["라온","세인","도하","유진"], hp:100,
+    r:{risk:[40,60],loyalty:[50,90],aggression:[45,75]} },
+  scout:{ id:"CHD_scout", label:"정찰", names:["미라","세라","노아","이린"], hp:80,
+    r:{risk:[45,75],loyalty:[40,80],aggression:[30,60]} },
+};
+const TAG_KO = { ally_died_unrescued:"구하지 못한 죽음", rescued_ally:"구해낸 기억",
+  wounded_in_rescue:"구조의 상처" };
+
+/* ═══ 상태 ═══ */
+let S = null;
+const el = id => document.getElementById(id);
+const REDUCED = matchMedia("(prefers-reduced-motion:reduce)").matches;
+const sleep = ms => new Promise(r => setTimeout(r, REDUCED ? 0 : ms));
+
+function newRun(seed){
+  const R = rng(seed);
+  const used = [];
+  const roll = key => {
+    const d = DEFS[key];
+    const free = d.names.filter(n => !used.includes(n));
+    const p = { risk:R.int(...d.r.risk), loyalty:R.int(...d.r.loyalty), aggression:R.int(...d.r.aggression) };
+    const name = free.length ? R.pick(free) : R.pick(d.names)+" 2";
+    used.push(name);
+    return { name, def:d, p, hp:d.hp, maxHp:d.hp, fatigue:0, fear:0, trust:{},
+             mem:[], goals:[], alive:true, holding:false };
+  };
+  const party = [roll("vanguard"), roll("vanguard"), roll("scout"), roll("scout")];
+  party.forEach(a => party.forEach(b => { if (a!==b) a.trust[b.name] = 50; }));
+  S = { seed, R, party, depth:0, press:0, log:[], phase:"prep", done:false, final:null,
+        kit:{ smoke:2, heal:2, calm:1 } };
+}
+
+/* ═══ 판단 ═══ */
+function agentState(c, subject, threat){
+  const h = c.hp / c.maxHp;
+  const mem = {};
+  for (const m of c.mem) if (!mem[m.tag] || m.importance > mem[m.tag]) mem[m.tag] = m.importance;
+  return { h, fear:c.fear, trust:c.trust[subject.name] ?? 0,
+    selfRisk: clamp(threat * (1 + (1-h)*0.6), 0, 100),
+    stamina: clamp(h*100 - c.fatigue, 0, 100),
+    mem, goals:[...c.goals], p:c.p, subject, hasSmoke:c.holding };
+}
+const tolerable = a => 40 + (a.p.risk-50)*0.6 + a.h*40 - a.fear*0.25;
+
+const ACTIONS = [
+  { s:"SUPPRESS", ok:(x,a)=> a.hasSmoke && !x.used && x.stamina>=20 && x.threat>0,
+    eff:x=>({...x, threat:Math.max(0,x.threat-RULE.suppress), used:true, stamina:x.stamina-20}),
+    cost:()=>2 },
+  { s:"RESCUE", ok:(x,a)=> !x.allySafe && !x.selfSafe && x.stamina>=30 && x.threat<=tolerable(a),
+    eff:x=>({...x, allySafe:true, stamina:x.stamina-30}), cost:x=>2 + x.threat/25 },
+  { s:"FALL_BACK", ok:x=> !x.selfSafe, eff:x=>({...x, selfSafe:true}), cost:()=>1 },
+];
+function plan(a){
+  let frontier = [{ x:{allySafe:false,selfSafe:false,threat:a.selfRisk,used:false,
+    stamina:Math.round(a.stamina)}, steps:[], cost:0 }];
+  while (frontier.length){
+    frontier.sort((p,q)=> p.cost-q.cost || p.steps.length-q.steps.length);
+    const n = frontier.shift();
+    if (n.x.allySafe && n.x.selfSafe) return { steps:n.steps, cost:Math.round(n.cost*10)/10 };
+    if (n.steps.length >= 4) continue;
+    for (const act of ACTIONS){
+      if (!act.ok(n.x, a)) continue;
+      frontier.push({ x:act.eff(n.x), steps:[...n.steps, act.s], cost:n.cost + act.cost(n.x) });
+    }
+  }
+  return null;
+}
+function decide(a, O){
+  if (O.line > 0 && a.h < O.line)
+    return { act:"RETREAT", layer:"L0",
+      code:`RETREAT(health_ratio=${a.h.toFixed(2)}<threshold=${O.line},order=retreat_condition)` };
+
+  const goal = a.goals.find(g => g.kind === "never_abandon_ally");
+  if (goal){
+    const p = plan(a);
+    if (p) return { act:"RESCUE", layer:"L2", plan:p.steps,
+      code:`RESCUE(goal=never_abandon_ally,<b>plan=${p.steps.join("→")}</b>,cost=${p.cost}`
+         + ` overrides fear=${Math.round(a.fear)})` };
+  }
+
+  const ap = appetite(O.risk), dL = a.p.loyalty-50, dR = a.p.risk-50, calm = 100-a.fear;
+  const ms = t => Object.entries(a.mem).reduce((s,[k,v]) => s + (t[k]||0)*v, 0);
+  const sc = {
+    RESCUE: W.rescue.trust*a.trust + W.rescue.calm*calm + W.rescue.selfRisk*a.selfRisk
+          + W.rescue.loy*dL + W.rescue.risk*dR + ap + ms(W.rescue.mem),
+    RETREAT: W.retreat.fear*a.fear + W.retreat.selfRisk*a.selfRisk + W.retreat.trust*a.trust
+          + W.retreat.loy*dL - ap + ms(W.retreat.mem),
+    HOLD: W.hold.base + W.hold.loy*dL + W.hold.fear*a.fear,
+    ATTACK: W.attack.aggr*a.p.aggression + W.attack.calm*calm + W.attack.selfRisk*a.selfRisk + ap,
+  };
+  let best = "RESCUE";
+  for (const k of ["RESCUE","RETREAT","HOLD","ATTACK"]) if (sc[k] > sc[best]) best = k;
+
+  const dom = tbl => { let b=null;
+    for (const [k,v] of Object.entries(a.mem)){ const e=(tbl[k]||0)*v;
+      if (e!==0 && (!b||Math.abs(e)>Math.abs(b.e))) b={k,e}; }
+    return b ? `,memory=${b.k}` : ""; };
+  const r = Math.round;
+  const code = best==="RESCUE"
+    ? `RESCUE(target=${a.subject.name},trust=${r(a.trust)},fear=${r(a.fear)},self_risk=${r(a.selfRisk)}${dom(W.rescue.mem)})`
+    : best==="RETREAT"
+    ? `RETREAT(fear=${r(a.fear)},self_risk=${r(a.selfRisk)},trust=${r(a.trust)}${dom(W.retreat.mem)})`
+    : best==="HOLD"
+    ? `HOLD(order=advance,loyalty=${a.p.loyalty},fear=${r(a.fear)})`
+    : `ATTACK(aggression=${a.p.aggression},self_risk=${r(a.selfRisk)})`;
+  return { act:best, layer:"L1", code };
+}
+
+/* ═══ 기억 ═══ */
+function remember(c, tag, imp, subj){
+  const i = c.mem.findIndex(m => m.tag===tag && m.subject===subj);
+  if (i >= 0){ c.mem[i].importance = clamp(c.mem[i].importance + RULE.reinforce, 0, 100); return c.mem[i]; }
+  const m = { tag, importance:imp, subject:subj };
+  c.mem.push(m);
+  return m;
+}
+const addGoal = c => { if (!c.goals.some(g=>g.kind==="never_abandon_ally"))
+  c.goals.push({ kind:"never_abandon_ally", pri:RULE.goalPri }); };
+
+/* ═══ 탑의 기억 (localStorage) ═══ */
+const KEY = "tower-memory-v2";
+let MEM = { seen:[], echoes:[], runs:[] };
+function loadMem(){
+  try { const raw = localStorage.getItem(KEY); if (raw) MEM = JSON.parse(raw); } catch {}
+  for (const k of ["seen","echoes","runs"]) if (!Array.isArray(MEM[k])) MEM[k] = [];
+}
+const saveMem = () => { try { localStorage.setItem(KEY, JSON.stringify(MEM)); } catch {} };
+
+/* ═══ 명령 ═══ */
+const order = () => ({
+  risk: document.querySelector('#risk button[aria-pressed="true"]')?.dataset.v ?? "balanced",
+  line: Number(el("line")?.value ?? 25) / 100,
+});
+
+/* ═══ 한 좌표 진행 ═══ */
+async function enter(gateKey){
+  if (S.phase !== "prep" || S.done) return;
+  const G = GATES[gateKey];
+  const O = order();
+  const living = S.party.filter(c => c.alive);
+
+  S.phase = "moving";
+  render();
+
+  const depth = ++S.depth;
+  S.press += RULE.pressPerDepth + G.press;
+  const threat = Math.max(5, Math.round(RULE.baseThreat(depth) + S.press*RULE.threatFromPress + G.threat));
+
+  if (G.fatigue) for (const c of living) c.fatigue = clamp(c.fatigue + G.fatigue, 0, 100);
+
+  const firstSeen = !MEM.seen.includes(depth);
+  if (firstSeen){ MEM.seen.push(depth); saveMem(); }
+
+  /* 잔상 — 이 좌표에서 죽은 이전 등반자 */
+  const echo = MEM.echoes.find(e => e.depth === depth);
+  let echoNote = null;
+  if (echo){
+    if (G.echo){
+      const gain = echo.kind;
+      S.kit[gain] = Math.min(4, S.kit[gain] + 1);
+      for (const c of living) c.fear = clamp(c.fear - RULE.echoRelief, 0, 100);
+      echoNote = `${echo.name}의 잔상을 회수했다 — ${gain==="smoke"?"교란기":"안정제"} +1`;
+      MEM.echoes = MEM.echoes.filter(e => e !== echo); saveMem();
+    } else {
+      for (const c of living) c.fear = clamp(c.fear + RULE.echoFear, 0, 100);
+      echoNote = `${echo.name}의 이름이 벽면에 떠 있다 — 전원 공포 +${RULE.echoFear}`;
+    }
+  }
+
+  /* 쓰러지는 자 — 체력이 낮을수록 높은 확률 */
+  const weights = living.map(c => 1 + (1 - c.hp/c.maxHp) * 2.2);
+  let roll = S.R() * weights.reduce((a,b)=>a+b,0);
+  let fallen = living[living.length-1];
+  for (let i=0;i<living.length;i++){ roll -= weights[i]; if (roll <= 0){ fallen = living[i]; break; } }
+  const others = living.filter(c => c !== fallen);
+
+  const entry = { depth, threat, gate:gateKey, fallen, echoNote, firstSeen,
+                  rows:[], rescued:false, died:[] };
+  S.log.unshift(entry);
+  render();
+
+  /* 순차 관측 */
+  const acts = [];
+  for (const c of others){
+    const a = agentState(c, fallen, threat);
+    const d = decide(a, O);
+    acts.push({ c, d });
+    entry.rows.push({ c, d, dmg:0 });
+    renderObs();
+    await sleep(520);
+  }
+
+  const rescued = acts.some(x => x.d.act === "RESCUE");
+  entry.rescued = rescued;
+
+  for (const x of acts){
+    x.c.fatigue = clamp(x.c.fatigue + RULE.fatigue, 0, 100);
+    x.c.holding = false;
+    const row = entry.rows.find(r => r.c === x.c);
+    if (x.d.act === "RESCUE" || x.d.act === "ATTACK"){
+      const t = x.d.plan?.includes("SUPPRESS") ? Math.max(0, threat - RULE.suppress) : threat;
+      const dmg = Math.round(t * RULE.dmg);
+      row.dmg = dmg;
+      x.c.hp = clamp(x.c.hp - dmg, 0, x.c.maxHp);
+      x.c.fear = clamp(x.c.fear + Math.round(dmg * RULE.fearGain), 0, 100);
+      if (x.d.act === "RESCUE"){
+        fallen.trust[x.c.name] = clamp((fallen.trust[x.c.name] ?? 50) + RULE.rescuedTrust, 0, 100);
+        x.c.trust[fallen.name] = clamp((x.c.trust[fallen.name] ?? 50) + RULE.rescuerTrust, 0, 100);
+        remember(x.c, "rescued_ally", RULE.rescueImp, fallen.name);
+        if (dmg > 0) remember(x.c, "wounded_in_rescue", RULE.woundImp, undefined);
+      }
+      if (x.c.hp <= 0) kill(x.c, entry, depth);
+    } else {
+      x.c.fear = clamp(x.c.fear - RULE.fearDecay, 0, 100);
+    }
+  }
+
+  if (!rescued){
+    kill(fallen, entry, depth);
+    for (const x of acts){
+      if (!x.c.alive) continue;
+      remember(x.c, "ally_died_unrescued", RULE.abandonImp, fallen.name);
+      addGoal(x.c);
+    }
+  }
+
+  /* 보급 */
+  if (G.supply){
+    const gain = S.R() < 0.5 ? "smoke" : "heal";
+    S.kit[gain] = Math.min(4, S.kit[gain] + 1);
+    entry.supply = gain === "smoke" ? "교란기 +1" : "안정제 +1";
+  }
+
+  /* 회복 — 체력과 공포만. 피로는 남는다 */
+  for (const c of S.party){
+    if (!c.alive) continue;
+    c.hp = Math.min(c.maxHp, c.hp + Math.round(c.maxHp * RULE.restHeal));
+    c.fear = Math.max(0, c.fear - RULE.restFear);
+  }
+
+  await sleep(320);
+
+  const stillLiving = S.party.filter(c => c.alive);
+  if (S.depth >= RULE.depths) finish(null);
+  else if (stillLiving.length === 0) finish("전멸했다");
+  else if (stillLiving.length < RULE.minParty) finish("남은 인원으로는 다음 문을 열 수 없다");
+  else if (O.line > 0 && stillLiving.every(c => c.hp/c.maxHp < O.line))
+    finish("전원이 퇴각선 아래다 — 투영을 닫는다");
+  else S.phase = "prep";
+
+  render();
+}
+
+function kill(c, entry, depth){
+  c.alive = false; c.hp = 0;
+  entry.died.push(c);
+  if (!MEM.echoes.some(e => e.depth === depth)){
+    MEM.echoes.push({ depth, name:c.name, kind: S.R() < 0.5 ? "smoke" : "heal" });
+    saveMem();
+  }
+}
+
+function finish(reason){
+  if (S.done) return;
+  S.done = true; S.phase = "over";
+  const cleared = S.depth >= RULE.depths && !reason;
+  S.final = { cleared, reason,
+    survivors: S.party.filter(c=>c.alive).map(c=>c.name),
+    deaths: S.party.filter(c=>!c.alive).map(c=>c.name) };
+  MEM.runs.unshift({ depth:S.depth, cleared, deaths:S.final.deaths });
+  MEM.runs = MEM.runs.slice(0, 8);
+  saveMem();
+}
+
+/* ═══ 렌더 ═══ */
+function ring(kind){
+  const col = kind==="aligned" ? "#4fd6e8" : kind==="warped" ? "#c86aa8" : "#e0a34a";
+  const inner = kind==="warped"
+    ? `<ellipse cx="43" cy="43" rx="26" ry="15" fill="none" stroke="${col}" stroke-width="1"
+         opacity=".55" transform="rotate(-18 43 43)"/>
+       <ellipse cx="43" cy="43" rx="15" ry="26" fill="none" stroke="${col}" stroke-width="1"
+         opacity=".35" transform="rotate(-18 43 43)"/>`
+    : kind==="deep"
+    ? `<circle cx="43" cy="43" r="27" fill="none" stroke="${col}" stroke-width="1" opacity=".5"/>
+       <circle cx="43" cy="43" r="18" fill="none" stroke="${col}" stroke-width="1" opacity=".35"/>
+       <circle cx="43" cy="43" r="9" fill="none" stroke="${col}" stroke-width="1" opacity=".2"/>`
+    : `<circle cx="43" cy="43" r="24" fill="none" stroke="${col}" stroke-width="1" opacity=".5"/>`;
+  return `<svg viewBox="0 0 86 86" aria-hidden="true">
+    <defs><radialGradient id="gg-${kind}" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="${col}" stop-opacity=".30"/>
+      <stop offset="70%" stop-color="${col}" stop-opacity=".05"/>
+      <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
+    </radialGradient></defs>
+    <circle cx="43" cy="43" r="40" fill="url(#gg-${kind})"/>
+    <circle class="spin" cx="43" cy="43" r="36" fill="none" stroke="${col}" stroke-width="1.4"
+      stroke-dasharray="7 11" opacity=".85"/>
+    <circle class="spin rev" cx="43" cy="43" r="31" fill="none" stroke="${col}" stroke-width=".8"
+      stroke-dasharray="3 22" opacity=".6"/>
+    ${inner}
+  </svg>`;
+}
+
+function renderStage(){
+  if (S.done){
+    el("stage").innerHTML = "";
+    return;
+  }
+  if (S.phase === "moving"){
+    el("stage").innerHTML =
+      `<div class="stagehead"><h2>문을 통과하고 있다</h2>
+       <span class="note">판단은 그들이 한다 — 관측만 가능</span></div>`;
+    return;
+  }
+
+  const next = S.depth + 1;
+  const seen = MEM.seen.includes(next);
+  const base = RULE.baseThreat(next) + S.press*RULE.threatFromPress;
+  const echo = MEM.echoes.find(e => e.depth === next);
+
+  const cards = Object.entries(GATES).map(([key,G]) => {
+    const t = Math.max(5, Math.round(base + G.threat));
+    const est = seen ? `${t}` : `${Math.max(5,t-8)}~${t+8}`;
+    const rows = [
+      `<div class="r"><span>위협</span><b class="${G.threat>0?"bad":G.threat<0?"good":""}">${est}</b></div>`,
+      `<div class="r"><span>위상압</span><b class="${G.press?"bad":""}">+${RULE.pressPerDepth + G.press}</b></div>`,
+    ];
+    if (G.fatigue) rows.push(`<div class="r"><span>피로</span><b class="bad">+${G.fatigue}</b></div>`);
+    if (G.supply) rows.push(`<div class="r"><span>보급</span><b class="good">확실</b></div>`);
+    if (G.echo) rows.push(`<div class="r"><span>잔상</span><b class="rec">${echo ? `${echo.name} 회수` : "없음"}</b></div>`);
+    return `<button type="button" class="gate ${key}" data-gate="${key}">
+      <div class="ring">${ring(key)}</div>
+      <div class="gname" style="color:var(--holo-faint)">${G.en}</div>
+      <div class="gko">${G.ko}</div>
+      <div class="rows">${rows.join("")}</div>
+    </button>`;
+  }).join("");
+
+  const living = S.party.filter(c => c.alive);
+  const kitRow = (id, label, help) => {
+    const n = S.kit[id];
+    const btns = living.map(c => {
+      const held = id==="smoke" && c.holding;
+      return `<button type="button" data-kit="${id}" data-who="${c.name}"
+        class="${held?"held":""}" ${n<=0 && !held ? "disabled" : ""}>${c.name}</button>`;
+    }).join("");
+    return `<div class="kitrow">
+      <div class="kitname">${label} <span style="color:var(--holo-faint)">${n}</span></div>
+      <div class="give">${btns}<span class="kithelp" style="margin:0 0 0 4px">${help}</span></div>
+    </div>`;
+  };
+
+  el("stage").innerHTML = `
+    <div class="stagehead">
+      <h2>${next}번째 좌표 — 어느 문으로 보낼까</h2>
+      <span class="note">${seen ? "다녀온 좌표다. 위협이 정확히 보인다" : "미탐사 좌표. 위협은 추정치다"}</span>
+    </div>
+    <div class="gates">${cards}</div>
+    <div class="kitpanel">
+      ${kitRow("smoke","교란기","받은 사람만 연막을 계획에 넣을 수 있다")}
+      ${kitRow("heal","안정제","즉시 체력 회복")}
+      ${kitRow("calm","억제제","공포 −40, 피로 +15")}
+      <div class="orders">
+        <div class="field"><span class="flabel">위험 정책</span>
+          <div class="seg" id="risk" role="group" aria-label="위험 정책">
+            <button type="button" data-v="cautious">신중</button>
+            <button type="button" data-v="balanced" aria-pressed="true">균형</button>
+            <button type="button" data-v="aggressive">과감</button>
+          </div>
+        </div>
+        <div class="field"><label class="flabel" for="line">퇴각선</label>
+          <div class="slider"><input type="range" id="line" min="0" max="60" step="5" value="25">
+          <span class="sval" id="lineval">25%</span></div>
+        </div>
+      </div>
+    </div>`;
+
+  // 명령 상태 복원
+  if (S.risk) for (const b of el("risk").querySelectorAll("button"))
+    b.setAttribute("aria-pressed", String(b.dataset.v === S.risk));
+  if (S.line != null){ el("line").value = S.line; el("lineval").textContent = S.line + "%"; }
+}
+
+function renderHud(){
+  el("g-depth").textContent = `${S.depth} / ${RULE.depths}`;
+  el("g-press").textContent = S.press;
+  el("g-press-wrap").className = "gauge" + (S.press > 60 ? " warn" : "");
+  el("pbar").style.width = Math.min(100, S.press) + "%";
+  const pips = (id, n) => el(id).innerHTML =
+    Array.from({length:4}, (_,i) => `<u class="${i<n?"on":""}"></u>`).join("");
+  pips("k-smoke", S.kit.smoke); pips("k-heal", S.kit.heal); pips("k-calm", S.kit.calm);
+}
+
+function renderParty(){
+  const alive = S.party.filter(c=>c.alive).length;
+  el("p-note").textContent = `${alive}명 생존 · 같은 Definition에서 뽑힌 서로 다른 개체`;
+  el("party").innerHTML = S.party.map(c => {
+    const h = c.hp/c.maxHp;
+    const col = h>.5 ? "var(--safe)" : h>.25 ? "var(--record)" : "var(--danger)";
+    const st = (l,ratio,txt,c2) => `<div class="stat"><i>${l}</i>
+      <div class="t"><span style="width:${Math.round(ratio*100)}%;background:${c2}"></span></div>
+      <b>${txt}</b></div>`;
+    const marks = [];
+    if (!c.alive) marks.push(`<span class="mk d">소실</span>`);
+    if (c.holding) marks.push(`<span class="mk k">교란기 소지</span>`);
+    for (const g of c.goals) marks.push(`<span class="mk g">다시는 버리지 않는다</span>`);
+    for (const m of c.mem) marks.push(`<span class="mk m">${TAG_KO[m.tag]??m.tag} ${m.importance}</span>`);
+    return `<article class="unit ${c.alive?"":"gone"} ${c.holding?"holding":""}">
+      <div class="uhead"><strong>${c.name}</strong><em>${c.def.label} · 충성 ${c.p.loyalty}</em></div>
+      ${st("체력",h,String(c.hp),col)}
+      ${st("공포",c.fear/100,String(c.fear),"var(--danger)")}
+      ${st("피로",c.fatigue/100,String(c.fatigue),"var(--warp)")}
+      <div class="marks">${marks.join("")}</div>
+    </article>`;
+  }).join("");
+}
+
+const SAY = {
+  RESCUE:(x,f)=> x.d.layer==="L2"
+    ? `두려움에도 몸이 먼저 움직였다. ${x.d.plan.includes("SUPPRESS")?"교란기를 터뜨리고 들어갔다.":"곧장 들어갔다."}`
+    : `${eul(f.name)} 끌어내려 들어갔다.`,
+  RETREAT:(x,f)=> `${eul(f.name)} 두고 물러섰다.`,
+  HOLD:()=> `자리를 지켰다. 움직이지 않았다.`,
+  ATTACK:()=> `적을 쫓았다. 쓰러진 동료에게는 가지 않았다.`,
+};
+
+function renderObs(){
+  el("o-note").textContent = S.log.length ? `${S.log.length}개 좌표` : "";
+  if (!S.log.length){
+    el("obs").innerHTML = `<p class="none">문을 하나 고르면 여기에 기록이 쌓인다.</p>`;
+    return;
+  }
+  el("obs").innerHTML = S.log.map(f => {
+    const rows = f.rows.map(r => {
+      const dead = f.died.includes(r.c) ? ` <u class="kill">— 여기서 소실</u>` : "";
+      const dmg = r.dmg > 0 ? ` <u>피해 ${r.dmg}</u>` : "";
+      return `<div class="row"><div class="rn">${r.c.name}</div>
+        <div class="rs">${SAY[r.d.act](r,f.fallen)}${dmg}${dead}</div>
+        <div class="rc">${r.d.code}</div></div>`;
+    }).join("");
+    const seal = f.rows.length === 0 ? "" : `<div class="seal ${f.rescued?"ok":"no"}">
+      <span class="m">${f.rescued?"회수":"유실"}</span>
+      <span>${f.rescued ? `${eun(f.fallen.name)} 살아남았다.`
+        : `아무도 오지 않았다. ${eun(f.fallen.name)} 거기서 소실됐다.`}</span></div>`;
+    return `<div class="depth">
+      <div class="dnum">${String(f.depth).padStart(2,"0")}<em>위협 ${f.threat}</em></div>
+      <div>
+        <div class="dhead">
+          <span class="gk">${GATES[f.gate].ko}</span>
+          <span class="fall">${iga(f.fallen.name)} 쓰러졌다</span>
+          ${f.firstSeen?`<span class="echo">최초 좌표</span>`:""}
+          ${f.supply?`<span class="echo">${f.supply}</span>`:""}
+        </div>
+        ${f.echoNote?`<p class="none" style="color:var(--record);margin:0 0 9px">${f.echoNote}</p>`:""}
+        ${rows}${seal}
+      </div></div>`;
+  }).join("");
+}
+
+function renderFinal(){
+  if (!S.final){ el("final").innerHTML = ""; return; }
+  const f = S.final;
+  el("final").innerHTML = `<div class="final ${f.cleared?"win":"lose"}">
+    <h4>${f.cleared?"정상 좌표에 도달했다":"투영이 끊겼다"}</h4>
+    <div class="frow">
+      <div><i>도달</i><span>${S.depth} / ${RULE.depths}</span></div>
+      <div><i>생존</i><span style="color:var(--safe)">${f.survivors.join(", ")||"없음"}</span></div>
+      <div><i>소실</i><span style="color:var(--danger)">${f.deaths.join(", ")||"없음"}</span></div>
+      ${f.reason?`<div><i>사유</i><span>${f.reason}</span></div>`:""}
+    </div>
+    <div class="again"><button type="button" class="btn" id="again">새 파티로 다시 등반</button></div>
+  </div>`;
+  el("again").addEventListener("click", () => {
+    newRun((Date.now() ^ 0x9e37) >>> 0);
+    render();
+  });
+}
+
+function renderLedger(){
+  el("coords").innerHTML = Array.from({length:RULE.depths}, (_,i) => {
+    const d = i+1;
+    const e = MEM.echoes.find(x => x.depth === d);
+    const cls = e ? "echo" : MEM.seen.includes(d) ? "seen" : "";
+    const title = e ? `${d}번 좌표 · ${e.name}의 잔상` : `${d}번 좌표`;
+    return `<span class="co ${cls}" title="${title}">${d}</span>`;
+  }).join("");
+  el("hist").innerHTML = MEM.runs.length
+    ? MEM.runs.map((r,i) => `<div class="hi">
+        <span class="a">${MEM.runs.length-i}회차</span>
+        <span class="b">${r.depth}좌표${r.cleared?" 정상":""}</span>
+        <span class="c">${r.deaths.length?`${r.deaths.join(", ")} 소실`:"전원 생존"}</span>
+      </div>`).join("")
+    : `<p class="none">아직 아무도 문을 열지 않았다.</p>`;
+}
+
+function render(){
+  renderHud(); renderStage(); renderParty(); renderObs(); renderFinal(); renderLedger();
+  try {
+    window.claude?.hot?.snapshot?.({ seed:S.seed, risk:S.risk, line:S.line });
+  } catch {}
+}
+
+/* ═══ 입력 ═══ */
+document.addEventListener("click", e => {
+  const gate = e.target.closest("[data-gate]");
+  if (gate && !gate.disabled){ void enter(gate.dataset.gate); return; }
+
+  const kit = e.target.closest("[data-kit]");
+  if (kit && !kit.disabled){
+    const who = S.party.find(c => c.name === kit.dataset.who);
+    if (!who || !who.alive) return;
+    const id = kit.dataset.kit;
+    if (id === "smoke"){
+      if (who.holding){ who.holding = false; S.kit.smoke++; }
+      else if (S.kit.smoke > 0){
+        S.party.forEach(c => { if (c.holding){ c.holding = false; S.kit.smoke++; } });
+        who.holding = true; S.kit.smoke--;
+      }
+    } else if (id === "heal" && S.kit.heal > 0){
+      who.hp = Math.min(who.maxHp, who.hp + Math.round(who.maxHp * RULE.healAmount));
+      S.kit.heal--;
+    } else if (id === "calm" && S.kit.calm > 0){
+      who.fear = clamp(who.fear - RULE.calmAmount, 0, 100);
+      who.fatigue = clamp(who.fatigue + RULE.calmFatigue, 0, 100);
+      S.kit.calm--;
+    }
+    render();
+    return;
+  }
+
+  const seg = e.target.closest("#risk button[data-v]");
+  if (seg){
+    S.risk = seg.dataset.v;
+    for (const b of el("risk").querySelectorAll("button"))
+      b.setAttribute("aria-pressed", String(b === seg));
+  }
+});
+document.addEventListener("input", e => {
+  if (e.target.id === "line"){ S.line = e.target.value; el("lineval").textContent = S.line + "%"; }
+});
+
+/* ═══ 시작 ═══ */
+function start(prev){
+  loadMem();
+  newRun(prev?.seed ?? 77001);
+  S.risk = prev?.risk ?? "balanced";
+  S.line = prev?.line ?? 25;
+  render();
+}
+if (window.claude?.hot?.ready) window.claude.hot.ready(start);
+else start(window.claude?.hot?.data ?? {});
+</script>
