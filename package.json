@@ -1,0 +1,22 @@
+{
+  "name": "living-world-core",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Living World — CORE GAMEPLAY 증명. 지속 상태가 판단을 바꾸는지 검증하는 최소 구현.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "demo": "tsx src/cli/demo.ts",
+    "check": "npm run typecheck && npm run test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
