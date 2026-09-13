@@ -244,6 +244,7 @@ footer code{font-family:var(--f-mono);color:var(--holo-dim)}
 <div class="wrap">
 
 <div class="hud">
+  <div class="gauge"><i>등반</i><b id="g-attempt">1회차</b></div>
   <div class="gauge"><i>좌표</i><b id="g-depth">0 / 10</b></div>
   <div class="gauge" id="g-press-wrap"><i>위상압</i><b id="g-press">0</b></div>
   <div class="pressure"><div class="pbar"><span id="pbar" style="width:0%"></span></div></div>
@@ -261,6 +262,10 @@ footer code{font-family:var(--f-mono);color:var(--holo-dim)}
     탑은 계단이 아니다. 매 좌표마다 <b>문 세 개</b>가 떠오르고, 당신은 어디로 보낼지만 정한다.
     안에서 무슨 선택을 할지는 <b>그들이 정한다</b> — 자기 공포·신뢰·기억으로.
     회색 줄이 그 판단의 실제 근거다.
+  </p>
+  <p class="sub" style="margin-top:9px">
+    <b>동료를 잃은 사람만이 다음 등반에서 계획을 세운다.</b> 그래서 생존자를 데려가고
+    쉬게 하는 것이 이 게임의 핵심이다 — 매번 새 사람으로 시작하면 아무도 아무것도 배우지 못한다.
   </p>
 </header>
 
@@ -352,22 +357,46 @@ const el = id => document.getElementById(id);
 const REDUCED = matchMedia("(prefers-reduced-motion:reduce)").matches;
 const sleep = ms => new Promise(r => setTimeout(r, REDUCED ? 0 : ms));
 
-function newRun(seed){
+const CAMP = { fearRecovered:20, attemptsShown:6 };
+
+/**
+ * 등반 하나를 시작한다. 생존자는 그대로 데려가고 빈 자리만 새 사람으로 채운다.
+ *
+ * 이게 중요한 이유: 목표(다시는 버리지 않는다)는 동료를 잃고 나서야 생기고, 그건 거의 항상
+ * 마지막 좌표다. 매번 새 파티를 만들면 그 목표가 한 번도 쓰이지 않는다 —
+ * 엔진 쪽 측정에서 600개 좌표 중 0회였다. 생존자를 데려가고 **쉬게 해야** 열린다.
+ */
+function newRun(seed, carried){
   const R = rng(seed);
-  const used = [];
+  const roster = (carried ?? []).filter(c => c.alive);
+
+  // 캠프 — 회복은 몸에만 일어난다. 기억과 목표는 남는다
+  for (const c of roster){
+    c.hp = c.maxHp;
+    c.fatigue = 0;
+    c.fear = Math.max(0, c.fear - CAMP.fearRecovered);
+    c.holding = false;
+    c.attempts = (c.attempts ?? 1) + 1;
+  }
+
+  const used = roster.map(c => c.name);
   const roll = key => {
     const d = DEFS[key];
     const free = d.names.filter(n => !used.includes(n));
     const p = { risk:R.int(...d.r.risk), loyalty:R.int(...d.r.loyalty), aggression:R.int(...d.r.aggression) };
-    const name = free.length ? R.pick(free) : R.pick(d.names)+" 2";
+    const name = free.length ? R.pick(free) : R.pick(d.names)+" "+(used.length+1);
     used.push(name);
     return { name, def:d, p, hp:d.hp, maxHp:d.hp, fatigue:0, fear:0, trust:{},
-             mem:[], goals:[], alive:true, holding:false };
+             mem:[], goals:[], alive:true, holding:false, attempts:1 };
   };
-  const party = [roll("vanguard"), roll("vanguard"), roll("scout"), roll("scout")];
-  party.forEach(a => party.forEach(b => { if (a!==b) a.trust[b.name] = 50; }));
+
+  const party = [...roster];
+  while (party.length < 4) party.push(roll(party.length % 2 === 0 ? "vanguard" : "scout"));
+  party.forEach(a => party.forEach(b => { if (a!==b && a.trust[b.name] === undefined) a.trust[b.name] = 50; }));
+
+  const returning = roster.length;
   S = { seed, R, party, depth:0, press:0, log:[], phase:"prep", done:false, final:null,
-        kit:{ smoke:2, heal:2, calm:1 } };
+        kit:{ smoke:2, heal:2, calm:1 }, attempt:(MEM.runs.length + 1), returning };
 }
 
 /* ═══ 판단 ═══ */
@@ -721,6 +750,7 @@ function renderStage(){
 }
 
 function renderHud(){
+  el("g-attempt").textContent = `${S.attempt}회차${S.returning ? ` · 복귀 ${S.returning}명` : ""}`;
   el("g-depth").textContent = `${S.depth} / ${RULE.depths}`;
   el("g-press").textContent = S.press;
   el("g-press-wrap").className = "gauge" + (S.press > 60 ? " warn" : "");
@@ -745,7 +775,9 @@ function renderParty(){
     for (const g of c.goals) marks.push(`<span class="mk g">다시는 버리지 않는다</span>`);
     for (const m of c.mem) marks.push(`<span class="mk m">${TAG_KO[m.tag]??m.tag} ${m.importance}</span>`);
     return `<article class="unit ${c.alive?"":"gone"} ${c.holding?"holding":""}">
-      <div class="uhead"><strong>${c.name}</strong><em>${c.def.label} · 충성 ${c.p.loyalty}</em></div>
+      <div class="uhead"><strong>${c.name}</strong><em>${c.def.label}${
+        (c.attempts ?? 1) > 1 ? ` · ${c.attempts}회차` : ""
+      } · 충성 ${c.p.loyalty}</em></div>
       ${st("체력",h,String(c.hp),col)}
       ${st("공포",c.fear/100,String(c.fear),"var(--danger)")}
       ${st("피로",c.fatigue/100,String(c.fatigue),"var(--warp)")}
@@ -799,6 +831,24 @@ function renderObs(){
 function renderFinal(){
   if (!S.final){ el("final").innerHTML = ""; return; }
   const f = S.final;
+
+  /* 캠프 — 데려갈 사람들이 무엇을 기억하고 있는지 보여준다 */
+  const survivors = S.party.filter(c => c.alive);
+  const camp = survivors.length ? `<div class="campbox">
+    <div class="camphead">캠프 — 이들을 데려간다</div>
+    ${survivors.map(c => `<div class="camprow">
+      <span class="cn">${c.name}</span>
+      <span class="ca">${c.attempts ?? 1}회차</span>
+      <span class="cm">${
+        c.goals.length
+          ? `<b>다시는 버리지 않는다</b>${c.mem.length ? ` · ${c.mem.map(m=>TAG_KO[m.tag]??m.tag).join(", ")}` : ""}`
+          : c.mem.length ? c.mem.map(m=>TAG_KO[m.tag]??m.tag).join(", ") : "아직 아무것도 잃지 않았다"
+      }</span>
+    </div>`).join("")}
+    <p class="campnote">체력과 피로는 회복된다. <b>기억과 목표는 남는다</b> —
+      목표를 가진 사람은 다음 등반에서 두려움을 넘는 계획을 세운다.</p>
+  </div>` : `<div class="campbox"><div class="camphead">아무도 돌아오지 못했다</div>
+    <p class="campnote">새 명단으로 다시 시작한다. 탑의 기록과 잔상은 남는다.</p></div>`;
   el("final").innerHTML = `<div class="final ${f.cleared?"win":"lose"}">
     <h4>${f.cleared?"정상 좌표에 도달했다":"투영이 끊겼다"}</h4>
     <div class="frow">
@@ -807,10 +857,15 @@ function renderFinal(){
       <div><i>소실</i><span style="color:var(--danger)">${f.deaths.join(", ")||"없음"}</span></div>
       ${f.reason?`<div><i>사유</i><span>${f.reason}</span></div>`:""}
     </div>
-    <div class="again"><button type="button" class="btn" id="again">새 파티로 다시 등반</button></div>
+    ${camp}
+    <div class="again">
+      <button type="button" class="btn primary-ghost" id="again">${
+        f.survivors.length ? "캠프에서 쉬고 다시 등반" : "새 명단으로 다시 등반"
+      }</button>
+    </div>
   </div>`;
   el("again").addEventListener("click", () => {
-    newRun((Date.now() ^ 0x9e37) >>> 0);
+    newRun((Date.now() ^ 0x9e37) >>> 0, S.party);
     render();
   });
 }
@@ -881,7 +936,7 @@ document.addEventListener("input", e => {
 /* ═══ 시작 ═══ */
 function start(prev){
   loadMem();
-  newRun(prev?.seed ?? 77001);
+  newRun(prev?.seed ?? 77001, null);
   S.risk = prev?.risk ?? "balanced";
   S.line = prev?.line ?? 25;
   render();
