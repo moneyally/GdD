@@ -41,6 +41,14 @@ export interface Encounter {
   readonly state: AgentState;
   readonly decision: Decision;
   readonly died: readonly string[];
+  readonly damageTaken: number;
+}
+
+/** 한 명의 선봉과 그가 구해야 할 동료 */
+export interface Pair {
+  readonly label: string;
+  readonly vanguard: CharacterInstance;
+  readonly ally: CharacterInstance;
 }
 
 export interface ScenarioWorld {
@@ -49,6 +57,11 @@ export interface ScenarioWorld {
   readonly vanguardB: CharacterInstance;
   readonly allyOfA: CharacterInstance;
   readonly allyOfB: CharacterInstance;
+  /**
+   * 4명 전체. fear x trust 2x2로 배치해 State가 판단을 가르는 범위를 한 번에 본다.
+   * A와 B는 CORE GAMEPLAY 통과 기준의 두 캐릭터와 동일하다.
+   */
+  readonly squad: readonly Pair[];
 }
 
 /**
@@ -73,7 +86,26 @@ export function buildScenario(): ScenarioWorld {
     trust: [{ target: allyOfB.instanceId, trust: 20 }],
   });
 
-  return { world, vanguardA, vanguardB, allyOfA, allyOfB };
+  // C, D는 A/B 뒤에 소환한다 — 앞선 두 명의 난수 소비 순서를 바꾸지 않기 위함
+  const allyOfC = summon(world, SCOUT.definitionId);
+  const allyOfD = summon(world, SCOUT.definitionId);
+  const vanguardC = summon(world, VANGUARD.definitionId, {
+    fear: 80,
+    trust: [{ target: allyOfC.instanceId, trust: 80 }],
+  });
+  const vanguardD = summon(world, VANGUARD.definitionId, {
+    fear: 20,
+    trust: [{ target: allyOfD.instanceId, trust: 20 }],
+  });
+
+  const squad: readonly Pair[] = [
+    { label: 'fear=20 trust=80', vanguard: vanguardA, ally: allyOfA },
+    { label: 'fear=80 trust=20', vanguard: vanguardB, ally: allyOfB },
+    { label: 'fear=80 trust=80', vanguard: vanguardC, ally: allyOfC },
+    { label: 'fear=20 trust=20', vanguard: vanguardD, ally: allyOfD },
+  ];
+
+  return { world, vanguardA, vanguardB, allyOfA, allyOfB, squad };
 }
 
 /** 한 번의 조우: 상황 제시 → 판단 → 결과 적용. */
@@ -91,6 +123,7 @@ export function runEncounter(
     actor: actor.instanceId,
     action: decision.reason.action,
     situation,
+    plan: decision.plan?.steps,
   });
   if (!result.ok) throw new Error(result.error);
 
@@ -101,6 +134,7 @@ export function runEncounter(
     state,
     decision,
     died: result.value.died,
+    damageTaken: result.value.damageTaken,
   };
 }
 

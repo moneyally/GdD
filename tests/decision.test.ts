@@ -128,7 +128,7 @@ describe('2차 조우 — 변화된 State 때문에 판단이 달라진다', () 
     );
   });
 
-  it('B: RETREAT → RESCUE (기억이 목표를 만들고, 목표가 공포를 덮어쓴다)', () => {
+  it('B: RETREAT → RESCUE (기억이 목표를 만들고, L2가 그 목표의 계획을 세운다)', () => {
     const { world, vanguardB, allyOfB } = buildScenario();
 
     world.advanceTick();
@@ -144,10 +144,14 @@ describe('2차 조우 — 변화된 State 때문에 판단이 달라진다', () 
     const second = runEncounter(world, vanguardB, newAlly, world.tick);
 
     expect(second.decision.reason.action).toBe('RESCUE');
-    expect(second.decision.reason.layer).toBe('L0');
+    // 목표 처리는 L0 강제가 아니라 L2 계획이다 — 목표는 '무엇을', 계획은 '어떻게'
+    expect(second.decision.reason.layer).toBe('L2');
+    expect(second.decision.plan?.steps).toEqual(['SUPPRESS', 'RESCUE', 'FALL_BACK']);
+
     // 근거가 기억에서 나온 목표임이 ReasonCode에 남는다
     const reason = formatReason(second.decision.reason);
     expect(reason).toContain('goal=never_abandon_ally');
+    expect(reason).toContain('plan=SUPPRESS→RESCUE→FALL_BACK');
     expect(reason).toContain('overrides');
     expect(reason).toContain('fear=');
     expect(second.decision.reason.factors.find((f) => f.key === 'source')?.value).toBe(

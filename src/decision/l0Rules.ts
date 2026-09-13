@@ -9,11 +9,15 @@
  * 우선순위 설계 근거:
  *  1. Master의 퇴각 조건이 가장 강하다 — 플레이어가 명시적으로 지정한 안전선이므로
  *     캐릭터 자율성이 이걸 넘으면 플레이어가 통제 불능이라고 느낀다.
- *  2. 기억에서 파생된 목표가 그다음이다. 이것이 "기억이 판단을 바꾼다"의 실행 경로다.
- *  3. 방어 명령 + 높은 충성은 자리를 지킨다.
+ *  2. 방어 명령 + 높은 충성은 자리를 지킨다.
+ *
+ * 기억에서 파생된 목표(never_abandon_ally)는 **여기 없다.** L2 GOAP로 옮겼다.
+ * 이유: 목표는 "무엇을"이고 계획은 "어떻게"다. L0에서 RESCUE를 강제하면 부상당한
+ * 캐릭터가 아무 준비 없이 뛰어들어 죽는다. L2는 같은 목표에서 연막→구조→이탈 같은
+ * 계획을 만들고, 계획이 불가능하면 목표를 포기한다.
  *
  * 미결 사항: 캐릭터의 목표가 Master의 퇴각 조건을 넘어설 수 있어야 하는가.
- * 지금은 넘지 못한다(1이 2보다 위). 넘게 만들면 "명령에 비용"이 필요하다 — 다음 단계 결정.
+ * 지금은 넘지 못한다. 넘게 만들면 "명령에 비용"이 필요하다 — OPEN-QUESTIONS 6-2.
  */
 
 import type { AgentState } from '../core/agentState.js';
@@ -41,25 +45,7 @@ export function applyL0(state: AgentState): ReasonCode | undefined {
     };
   }
 
-  // 규칙 2 — 기억에서 파생된 목표가 효용을 덮어쓴다
-  const goal = [...state.goals]
-    .filter((g) => g.kind === 'never_abandon_ally')
-    .sort((a, b) => b.priority - a.priority)[0];
-  if (goal && state.subject) {
-    return {
-      action: 'RESCUE',
-      layer: 'L0',
-      factors: [
-        { key: 'goal', value: goal.kind },
-        { key: 'priority', value: goal.priority },
-        ...(goal.sourceMemory ? [{ key: 'source', value: goal.sourceMemory }] : []),
-      ],
-      // 이 목표가 무엇을 눌렀는지 남긴다. 플레이어가 읽는 문장이 여기서 나온다.
-      overrides: [{ key: 'fear', value: state.fear }],
-    };
-  }
-
-  // 규칙 3 — 방어 명령 + 높은 충성은 자리를 지킨다
+  // 규칙 2 — 방어 명령 + 높은 충성은 자리를 지킨다
   if (
     state.order.goal === 'defend' &&
     state.personality.loyalty >= HOLD_LOYALTY_THRESHOLD &&

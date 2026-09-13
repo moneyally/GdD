@@ -24,24 +24,21 @@ function section(title: string): void {
 
 async function main(): Promise<void> {
   const shouldSave = process.argv.includes('--save');
-  const { world, vanguardA, vanguardB, allyOfA, allyOfB } = buildScenario();
+  const { world, squad } = buildScenario();
 
-  section('소환 — 같은 Definition, 다른 개체 (규칙 8)');
-  for (const c of [vanguardA, vanguardB]) {
+  section('소환 — 같은 Definition에서 4명 (규칙 8)');
+  for (const pair of squad) {
+    const c = pair.vanguard;
     console.log(
       `  ${c.identity.name} [${c.instanceId}] ← ${c.identity.definitionId}  ` +
         `risk=${c.personality.risk} loyalty=${c.personality.loyalty} ` +
-        `aggression=${c.personality.aggression}  fear=${c.emotion.fear} ` +
-        `trust=${c.relationships[0]?.trust ?? 0}`,
+        `aggression=${c.personality.aggression}  ${pair.label}  동료=${pair.ally.identity.name}`,
     );
   }
 
-  section('1차 조우 — 동일 상황, 다른 판단');
+  section('1차 조우 — 동일 상황, 4명의 다른 판단');
   world.advanceTick();
-  const first = [
-    runEncounter(world, vanguardA, allyOfA, world.tick),
-    runEncounter(world, vanguardB, allyOfB, world.tick),
-  ];
+  const first = squad.map((pair) => runEncounter(world, pair.vanguard, pair.ally, world.tick));
   for (const enc of first) {
     playerLines({ ...enc }).forEach((l) => console.log(l));
     debuggerLines({ ...enc }).forEach((l) => console.log(l));
@@ -49,28 +46,30 @@ async function main(): Promise<void> {
   }
 
   section('1차 결과 — State 변화');
-  for (const c of [vanguardA, vanguardB]) {
+  for (const pair of squad) {
+    const c = pair.vanguard;
     console.log(
       `  ${c.identity.name}  health=${c.needs.health}/${c.needs.maxHealth} ` +
         `fear=${c.emotion.fear}  memory=[${c.memory.map((m) => m.tag).join(', ')}]  ` +
-        `goals=[${c.goals.map((g) => g.kind).join(', ')}]`,
+        `goals=[${c.goals.map((g) => g.kind).join(', ')}]  동료=${pair.ally.status}`,
     );
-  }
-  for (const c of [allyOfA, allyOfB]) {
-    console.log(`  ${c.identity.name}  status=${c.status}`);
   }
 
   section('2차 조우 — 변화된 State 때문에 달라진 판단');
   world.advanceTick();
-  // B의 동료는 죽었으므로 새 정찰병을 소환한다. 규칙 8이 여기서 다시 확인된다.
-  const newAlly = summon(world, SCOUT.definitionId);
-  console.log(`  새 정찰병 소환: ${newAlly.identity.name} [${newAlly.instanceId}]`);
+  // 동료가 죽은 캐릭터에게는 새 정찰병을 붙인다. 규칙 8이 여기서 다시 확인된다.
+  const second = squad.map((pair) => {
+    let ally = pair.ally;
+    if (ally.status === 'dead') {
+      ally = summon(world, SCOUT.definitionId);
+      console.log(
+        `  ${pair.vanguard.identity.name}의 새 동료: ${ally.identity.name} [${ally.instanceId}]`,
+      );
+    }
+    return { pair, ally };
+  }).map(({ pair, ally }) => runEncounter(world, pair.vanguard, ally, world.tick));
   console.log('');
 
-  const second = [
-    runEncounter(world, vanguardA, allyOfA, world.tick),
-    runEncounter(world, vanguardB, newAlly, world.tick),
-  ];
   for (const enc of second) {
     playerLines({ ...enc }).forEach((l) => console.log(l));
     debuggerLines({ ...enc }).forEach((l) => console.log(l));
@@ -78,14 +77,17 @@ async function main(): Promise<void> {
   }
 
   section('판단 변화 요약');
-  console.log(
-    `  ${vanguardA.identity.name}: ${first[0]!.decision.reason.action} → ${second[0]!.decision.reason.action}` +
-      `   (${first[0]!.decision.reason.layer} → ${second[0]!.decision.reason.layer})`,
-  );
-  console.log(
-    `  ${vanguardB.identity.name}: ${first[1]!.decision.reason.action} → ${second[1]!.decision.reason.action}` +
-      `   (${first[1]!.decision.reason.layer} → ${second[1]!.decision.reason.layer})`,
-  );
+  for (const [i, pair] of squad.entries()) {
+    const f = first[i]!;
+    const s2 = second[i]!;
+    const changed = f.decision.reason.action === s2.decision.reason.action ? '  ' : '← 변화';
+    console.log(
+      `  ${pair.vanguard.identity.name.padEnd(4)} ${pair.label.padEnd(18)} ` +
+        `${f.decision.reason.action}(${f.decision.reason.layer}) → ` +
+        `${s2.decision.reason.action}(${s2.decision.reason.layer})  ` +
+        `피해 ${f.damageTaken} → ${s2.damageTaken}  ${changed}`,
+    );
+  }
 
   section(`Event Log — ${world.events.length}건 (6종만 기록, 규칙 3)`);
   for (const event of world.events.all()) {

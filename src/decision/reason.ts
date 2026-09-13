@@ -13,7 +13,7 @@
 export type Action = 'RESCUE' | 'RETREAT' | 'HOLD' | 'ATTACK';
 
 /** 판단 계층. 어느 층이 결정했는지 남긴다 */
-export type DecisionLayer = 'L0' | 'L1';
+export type DecisionLayer = 'L0' | 'L1' | 'L2';
 
 /** 수치 하나. 비교 임계값이 있으면 op/threshold를 채운다 */
 export interface Factor {

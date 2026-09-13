@@ -17,6 +17,8 @@ import type { CharacterInstance, MemoryEntry, MemoryTag } from '../core/instance
 import type { Transaction } from '../core/transaction.js';
 import type { World } from '../core/world.js';
 import type { Action } from '../decision/reason.js';
+import type { PlanStep } from '../decision/goapActions.js';
+import { effectiveThreat } from '../decision/l2Goap.js';
 import type { Situation } from '../decision/situation.js';
 import { object, topic } from '../log/josa.js';
 
@@ -48,6 +50,11 @@ export interface ResolveRequest {
   readonly actor: InstanceId;
   readonly action: Action;
   readonly situation: Situation;
+  /**
+   * L2가 세운 계획. 있으면 계획대로 수행한다.
+   * 연막이 포함되면 실제 위협이 줄어 피해도 줄어든다 — 계획한 캐릭터는 덜 다친다.
+   */
+  readonly plan?: readonly PlanStep[];
 }
 
 export interface ResolveResult {
@@ -55,6 +62,8 @@ export interface ResolveResult {
   readonly action: Action;
   /** 이 행동으로 죽은 캐릭터 */
   readonly died: readonly InstanceId[];
+  /** 실제로 입은 피해. 계획에 따라 달라진다 */
+  readonly damageTaken: number;
   readonly events: readonly WorldEvent[];
 }
 
@@ -76,12 +85,15 @@ export const ResolveTransaction: Transaction<ResolveRequest, ResolveResult> = {
     const subject = world.instance(request.situation.subject);
     const tick = request.situation.tick;
     const died: InstanceId[] = [];
+    let damageTaken = 0;
 
     switch (request.action) {
       case 'RESCUE':
       case 'ATTACK': {
         // 동료는 살아남고 행동자가 피해를 입는다
-        const damage = Math.round(request.situation.enemyThreat * OUTCOME.rescueDamageRatio);
+        const threat = effectiveThreat(request.situation.enemyThreat, request.plan ?? []);
+        const damage = Math.round(threat * OUTCOME.rescueDamageRatio);
+        damageTaken = damage;
         actor.needs.health = clamp(actor.needs.health - damage, 0, actor.needs.maxHealth);
         actor.emotion.fear = clamp(
           actor.emotion.fear + Math.round(damage * OUTCOME.rescueFearGainRatio),
@@ -149,6 +161,7 @@ export const ResolveTransaction: Transaction<ResolveRequest, ResolveResult> = {
       actor: request.actor,
       action: request.action,
       died,
+      damageTaken,
       events: world.events.all().slice(before),
     };
   },
