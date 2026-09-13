@@ -29,6 +29,22 @@ namespace LivingWorld.Core
 
     public enum DeathCause { KilledByEnemy, Abandoned }
 
+    public static class DeathCauseNames
+    {
+        public static string Wire(DeathCause cause) =>
+            cause == DeathCause.KilledByEnemy ? "killed_by_enemy" : "abandoned";
+
+        public static DeathCause Parse(string wire)
+        {
+            switch (wire)
+            {
+                case "killed_by_enemy": return DeathCause.KilledByEnemy;
+                case "abandoned": return DeathCause.Abandoned;
+                default: throw new FormatException($"알 수 없는 사인: {wire}");
+            }
+        }
+    }
+
     public sealed class DeathEvent : WorldEvent
     {
         public override EventKind Kind => EventKind.Death;
@@ -58,6 +74,31 @@ namespace LivingWorld.Core
     }
 
     public enum MissionOutcomeKind { Success, Partial, Failure }
+
+    public static class MissionOutcomeNames
+    {
+        public static string Wire(MissionOutcomeKind outcome)
+        {
+            switch (outcome)
+            {
+                case MissionOutcomeKind.Success: return "success";
+                case MissionOutcomeKind.Partial: return "partial";
+                case MissionOutcomeKind.Failure: return "failure";
+                default: throw new ArgumentOutOfRangeException(nameof(outcome));
+            }
+        }
+
+        public static MissionOutcomeKind Parse(string wire)
+        {
+            switch (wire)
+            {
+                case "success": return MissionOutcomeKind.Success;
+                case "partial": return MissionOutcomeKind.Partial;
+                case "failure": return MissionOutcomeKind.Failure;
+                default: throw new FormatException($"알 수 없는 미션 결과: {wire}");
+            }
+        }
+    }
 
     public sealed class MissionOutcomeEvent : WorldEvent
     {

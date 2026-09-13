@@ -12,7 +12,8 @@
 
 기획 문서(GDD v3.0)를 마크다운 레포로 정리했고, **판단 엔진이 실제로 돌아간다.**
 캐릭터가 자기 공포·신뢰·기억으로 판단하고, 그 판단이 세계에 사건을 남기고, 그 사건이
-다음 판단을 바꾼다 — 이걸 테스트로 고정해뒀다. TypeScript 58개 + C# 24개 통과.
+다음 판단을 바꾼다 — 이걸 테스트로 고정해뒀다. TypeScript 83개 + C# 32개 통과.
+**세이브 파일은 두 언어가 바이트 단위로 같은 것을 쓴다** — 웹에서 만든 세이브를 Unity가 그대로 연다.
 **아직 없는 것은 게임 엔진, 3D, 그리고 "재미있는가"에 대한 답이다.**
 
 | 있는 것 | 위치 |
@@ -21,7 +22,8 @@
 | 판단 엔진 (TypeScript, 원본) | `src/` — `npm run check` |
 | 판단 엔진 (C#, Unity용) | `unity/LivingWorld.Core/` — 골든 대조로 검증됨 |
 | Unity 브리지 (MonoBehaviour) | `unity/LivingWorld.Unity/` |
-| 웹 프로토타입 (차원문 서바이벌) | 아티팩트로 배포됨. 소스는 대화에만 있다 |
+| 웹 프로토타입 (차원문 서바이벌) | `prototype/holo-gates.html` (아티팩트로도 배포됨) |
+| 세이브 (저장/복원) | `src/persistence/` · `unity/LivingWorld.Core/Persistence/` · `unity/LivingWorld.Unity/SaveFile.cs` |
 | 설계 결정 기록 | `CORE.md`, `docs/proposal/holo-gates.md`, `OPEN-QUESTIONS.md` |
 
 **읽는 순서: `CORE.md` → `docs/proposal/holo-gates.md` → `OPEN-QUESTIONS.md`.**
@@ -38,7 +40,8 @@
 4. **ATTACK은 동료를 구하지 않는다.** 구했던 시절엔 관계가 판단에 영향을 주지 않았다 (실측 93% 대 92%)
 5. **회복은 체력으로, 한계는 피로로.** 회복이 없으면 10층이 도달 불가였다 (실측 200회 전부 8층 미달)
 6. **피해를 인원수로 나누지 않는다.** 나누면 ReasonCode의 self_risk가 거짓이 된다
-7. **판단 로직은 렌더 코드에 두지 않는다.** `LivingWorld.Core`가 UnityEngine을 참조하면 테스트가 깨진다
+7. **판단 로직은 렌더 코드에 두지 않는다.** `LivingWorld.Core`가 UnityEngine을 참조하면 테스트가 깨진다.
+   세이브도 같은 선을 지킨다 — 직렬화는 코어, 경로만 브리지(`SaveFile.cs`)
 8. **캠페인 구조는 선택이 아니라 필수다.** 한 번의 등반만으로는 "기억이 판단을 바꾼다"가
    **코드상 한 번도 실행되지 않는다** (600개 좌표에서 0회). 생존자를 데려가고 캠프에서
    쉬게 해야 열린다 (0 → 122회). 근거와 수치는 `docs/proposal/holo-gates.md`
@@ -165,7 +168,7 @@ Claude에게 주면 원격 MCP 서버로 붙일 수 있다.
 ```bash
 # TypeScript (원본 구현)
 npm install
-npm run check          # 타입 검사 + 테스트 58개
+npm run check          # 타입 검사 + 테스트 83개
 npm run tower          # 탑 등반 로그
 npm run tower:stats    # 명령별 결과 분포 (밸런스 도구)
 npm run compare        # 판단 비교표
@@ -174,7 +177,7 @@ npm run golden         # C# 대조용 정답지 재생성
 
 # C# (Unity용)
 cd unity
-dotnet test LivingWorld.Core.Tests/LivingWorld.Core.Tests.csproj    # 24개
+dotnet test LivingWorld.Core.Tests/LivingWorld.Core.Tests.csproj    # 32개
 ```
 
 `npm run golden`을 다시 돌렸다면 C# 테스트도 다시 돌려야 한다 — 규칙을 바꿨는데

@@ -8,7 +8,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -18,6 +18,7 @@ import { JsonSnapshotRepository, serialize } from '../src/persistence/jsonReposi
 import { takeSnapshot } from '../src/persistence/snapshot.js';
 import { World } from '../src/core/world.js';
 import { ALL_DEFINITIONS } from '../src/data/definitions.js';
+import { runTowerScenario } from '../src/scenario/towerRun.js';
 
 const workDir = mkdtempSync(join(tmpdir(), 'living-world-'));
 
@@ -97,5 +98,18 @@ describe('저장 / 복원', () => {
     expect(continuedB.identity.name).toBe(continuedA.identity.name);
     expect(continuedB.personality).toEqual(continuedA.personality);
     expect(continuedB.instanceId).toBe(continuedA.instanceId);
+  });
+
+  /**
+   * C# 포팅이 이 파일과 바이트 단위로 대조한다 (unity SnapshotTests).
+   * TS에서 저장 형식을 바꾸고 `npm run golden`을 잊으면 C#이 먼저 깨지는데,
+   * 그때 원인을 C#에서 찾게 된다. 여기서 먼저 잡는다.
+   */
+  it('golden/tower-snapshot.json이 현재 저장 형식과 일치한다 (`npm run golden` 갱신 확인)', () => {
+    const { world } = runTowerScenario();
+
+    const onDisk = readFileSync('golden/tower-snapshot.json', 'utf8').trimEnd();
+
+    expect(serialize(takeSnapshot(world))).toBe(onDisk);
   });
 });

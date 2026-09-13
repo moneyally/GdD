@@ -18,6 +18,8 @@ import { runTowerScenario, TOWER_RUN } from '../scenario/towerRun.js';
 import { SCOUT } from '../data/definitions.js';
 import { formatReason } from '../decision/reason.js';
 import { Rng } from '../core/rng.js';
+import { takeSnapshot } from '../persistence/snapshot.js';
+import { serialize } from '../persistence/jsonRepository.js';
 
 const OUT_DIR = 'golden';
 
@@ -124,15 +126,38 @@ function towerGolden(): unknown {
   };
 }
 
+/**
+ * Snapshot 원문 — 규칙 3의 저장 절반을 이식한 쪽에서도 검증하기 위한 정답지.
+ *
+ * 위의 세 파일은 "같은 판단이 나오는가"를 본다. 이 파일은 "같은 상태를 같은 바이트로
+ * 저장하는가"를 본다. 둘은 다른 주장이다 — 판단이 같아도 저장 스키마가 어긋나면
+ * 한쪽에서 저장한 세이브를 다른 쪽이 못 읽는다.
+ *
+ * 정렬된 키 순서까지 고정되어 있으므로 **바이트 단위로** 대조할 수 있다.
+ */
+function towerSnapshotGolden(): string {
+  const { world } = runTowerScenario();
+  return serialize(takeSnapshot(world));
+}
+
 const files: readonly [string, unknown][] = [
   ['rng.json', rngGolden()],
   ['core-gameplay.json', coreGolden()],
   ['tower-run.json', towerGolden()],
 ];
 
+/** 이미 직렬화된 문자열로 나오는 것들 (키 순서가 의미를 갖는다) */
+const rawFiles: readonly [string, string][] = [
+  ['tower-snapshot.json', towerSnapshotGolden()],
+];
+
 mkdirSync(OUT_DIR, { recursive: true });
 for (const [name, data] of files) {
   writeFileSync(`${OUT_DIR}/${name}`, JSON.stringify(data, null, 2) + '\n', 'utf8');
+  console.log(`  ${OUT_DIR}/${name}`);
+}
+for (const [name, text] of rawFiles) {
+  writeFileSync(`${OUT_DIR}/${name}`, text + '\n', 'utf8');
   console.log(`  ${OUT_DIR}/${name}`);
 }
 console.log('');

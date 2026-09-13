@@ -38,6 +38,21 @@ namespace LivingWorld.Core
 
     public enum LifeStatus { Alive, Dead }
 
+    public static class LifeStatusNames
+    {
+        public static string Wire(LifeStatus status) => status == LifeStatus.Alive ? "alive" : "dead";
+
+        public static LifeStatus Parse(string wire)
+        {
+            switch (wire)
+            {
+                case "alive": return LifeStatus.Alive;
+                case "dead": return LifeStatus.Dead;
+                default: throw new FormatException($"알 수 없는 생존 상태: {wire}");
+            }
+        }
+    }
+
     public sealed class Identity
     {
         public string Name;
@@ -77,6 +92,21 @@ namespace LivingWorld.Core
 
     public enum MemoryKind { Episodic, Social }
 
+    public static class MemoryKindNames
+    {
+        public static string Wire(MemoryKind kind) => kind == MemoryKind.Episodic ? "Episodic" : "Social";
+
+        public static MemoryKind Parse(string wire)
+        {
+            switch (wire)
+            {
+                case "Episodic": return MemoryKind.Episodic;
+                case "Social": return MemoryKind.Social;
+                default: throw new FormatException($"알 수 없는 기억 종류: {wire}");
+            }
+        }
+    }
+
     /// <summary>
     /// 기억 태그. 새 태그를 추가할 때 판단 계층에서의 의미도 함께 정의해야 한다.
     /// 문자열 자유 입력을 막아 "기억이 판단을 바꾼다"는 경로를 추적 가능하게 유지한다.
@@ -101,6 +131,18 @@ namespace LivingWorld.Core
                 case MemoryTag.WoundedInRescue: return "wounded_in_rescue";
                 case MemoryTag.WitnessedAllyDeath: return "witnessed_ally_death";
                 default: throw new ArgumentOutOfRangeException(nameof(tag));
+            }
+        }
+
+        public static MemoryTag Parse(string wire)
+        {
+            switch (wire)
+            {
+                case "ally_died_unrescued": return MemoryTag.AllyDiedUnrescued;
+                case "rescued_ally": return MemoryTag.RescuedAlly;
+                case "wounded_in_rescue": return MemoryTag.WoundedInRescue;
+                case "witnessed_ally_death": return MemoryTag.WitnessedAllyDeath;
+                default: throw new FormatException($"알 수 없는 기억 태그: {wire}");
             }
         }
     }
@@ -130,6 +172,16 @@ namespace LivingWorld.Core
     {
         public static string Wire(GoalKind kind) =>
             kind == GoalKind.NeverAbandonAlly ? "never_abandon_ally" : "survive";
+
+        public static GoalKind Parse(string wire)
+        {
+            switch (wire)
+            {
+                case "never_abandon_ally": return GoalKind.NeverAbandonAlly;
+                case "survive": return GoalKind.Survive;
+                default: throw new FormatException($"알 수 없는 목표: {wire}");
+            }
+        }
     }
 
     public sealed class Goal

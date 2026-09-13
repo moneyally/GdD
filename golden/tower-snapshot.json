@@ -1,0 +1,1498 @@
+{
+  "events": [
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000005",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 1,
+      "tick": 0,
+      "to": "CHR_0002",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000006",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 2,
+      "tick": 0,
+      "to": "CHR_0003",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000007",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 3,
+      "tick": 0,
+      "to": "CHR_0004",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000008",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 4,
+      "tick": 0,
+      "to": "CHR_0001",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000009",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 5,
+      "tick": 0,
+      "to": "CHR_0003",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000010",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 6,
+      "tick": 0,
+      "to": "CHR_0004",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000011",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 7,
+      "tick": 0,
+      "to": "CHR_0001",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000012",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 8,
+      "tick": 0,
+      "to": "CHR_0002",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000013",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 9,
+      "tick": 0,
+      "to": "CHR_0004",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000014",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 10,
+      "tick": 0,
+      "to": "CHR_0001",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000015",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 11,
+      "tick": 0,
+      "to": "CHR_0002",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "cause": "party_formed",
+      "eventId": "EVT_000016",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 12,
+      "tick": 0,
+      "to": "CHR_0003",
+      "trustAfter": 50,
+      "trustBefore": 0
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000017",
+      "kind": "WorldDiscovery",
+      "seq": 13,
+      "tick": 1,
+      "what": "tower_floor_1"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000018",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 14,
+      "tick": 1,
+      "to": "CHR_0001",
+      "trustAfter": 68,
+      "trustBefore": 50
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000019",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 15,
+      "tick": 1,
+      "to": "CHR_0003",
+      "trustAfter": 58,
+      "trustBefore": 50
+    },
+    {
+      "eventId": "EVT_000021",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0020",
+      "owner": "CHR_0001",
+      "seq": 16,
+      "tag": "rescued_ally",
+      "tick": 1
+    },
+    {
+      "eventId": "EVT_000023",
+      "importance": 45,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0022",
+      "owner": "CHR_0001",
+      "seq": 17,
+      "tag": "wounded_in_rescue",
+      "tick": 1
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000024",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 18,
+      "tick": 1,
+      "to": "CHR_0002",
+      "trustAfter": 68,
+      "trustBefore": 50
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000025",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 19,
+      "tick": 1,
+      "to": "CHR_0003",
+      "trustAfter": 58,
+      "trustBefore": 50
+    },
+    {
+      "eventId": "EVT_000027",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0026",
+      "owner": "CHR_0002",
+      "seq": 20,
+      "tag": "rescued_ally",
+      "tick": 1
+    },
+    {
+      "eventId": "EVT_000029",
+      "importance": 45,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0028",
+      "owner": "CHR_0002",
+      "seq": 21,
+      "tag": "wounded_in_rescue",
+      "tick": 1
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000030",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 22,
+      "tick": 1,
+      "to": "CHR_0004",
+      "trustAfter": 68,
+      "trustBefore": 50
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000031",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 23,
+      "tick": 1,
+      "to": "CHR_0003",
+      "trustAfter": 58,
+      "trustBefore": 50
+    },
+    {
+      "eventId": "EVT_000033",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0032",
+      "owner": "CHR_0004",
+      "seq": 24,
+      "tag": "rescued_ally",
+      "tick": 1
+    },
+    {
+      "eventId": "EVT_000035",
+      "importance": 45,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0034",
+      "owner": "CHR_0004",
+      "seq": 25,
+      "tag": "wounded_in_rescue",
+      "tick": 1
+    },
+    {
+      "eventId": "EVT_000036",
+      "kind": "MissionOutcome",
+      "outcome": "success",
+      "participants": [
+        "CHR_0001",
+        "CHR_0002",
+        "CHR_0004",
+        "CHR_0003"
+      ],
+      "seq": 26,
+      "summary": "세인:RESCUE 라온:RESCUE 세라:RESCUE",
+      "tick": 1
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000037",
+      "kind": "WorldDiscovery",
+      "seq": 27,
+      "tick": 2,
+      "what": "tower_floor_2"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000038",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 28,
+      "tick": 2,
+      "to": "CHR_0001",
+      "trustAfter": 68,
+      "trustBefore": 50
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000039",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 29,
+      "tick": 2,
+      "to": "CHR_0002",
+      "trustAfter": 58,
+      "trustBefore": 50
+    },
+    {
+      "eventId": "EVT_000041",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0040",
+      "owner": "CHR_0001",
+      "seq": 30,
+      "tag": "rescued_ally",
+      "tick": 2
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000042",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 31,
+      "tick": 2,
+      "to": "CHR_0003",
+      "trustAfter": 76,
+      "trustBefore": 58
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000043",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 32,
+      "tick": 2,
+      "to": "CHR_0002",
+      "trustAfter": 76,
+      "trustBefore": 68
+    },
+    {
+      "eventId": "EVT_000045",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0044",
+      "owner": "CHR_0003",
+      "seq": 33,
+      "tag": "rescued_ally",
+      "tick": 2
+    },
+    {
+      "eventId": "EVT_000047",
+      "importance": 45,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0046",
+      "owner": "CHR_0003",
+      "seq": 34,
+      "tag": "wounded_in_rescue",
+      "tick": 2
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000048",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 35,
+      "tick": 2,
+      "to": "CHR_0004",
+      "trustAfter": 68,
+      "trustBefore": 50
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000049",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 36,
+      "tick": 2,
+      "to": "CHR_0002",
+      "trustAfter": 58,
+      "trustBefore": 50
+    },
+    {
+      "eventId": "EVT_000051",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0050",
+      "owner": "CHR_0004",
+      "seq": 37,
+      "tag": "rescued_ally",
+      "tick": 2
+    },
+    {
+      "eventId": "EVT_000052",
+      "kind": "MissionOutcome",
+      "outcome": "success",
+      "participants": [
+        "CHR_0001",
+        "CHR_0003",
+        "CHR_0004",
+        "CHR_0002"
+      ],
+      "seq": 38,
+      "summary": "세인:RESCUE 이린:RESCUE 세라:RESCUE",
+      "tick": 2
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000053",
+      "kind": "WorldDiscovery",
+      "seq": 39,
+      "tick": 3,
+      "what": "tower_floor_3"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000054",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 40,
+      "tick": 3,
+      "to": "CHR_0001",
+      "trustAfter": 86,
+      "trustBefore": 68
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000055",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 41,
+      "tick": 3,
+      "to": "CHR_0003",
+      "trustAfter": 66,
+      "trustBefore": 58
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000056",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 42,
+      "tick": 3,
+      "to": "CHR_0002",
+      "trustAfter": 94,
+      "trustBefore": 76
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000057",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 43,
+      "tick": 3,
+      "to": "CHR_0003",
+      "trustAfter": 84,
+      "trustBefore": 76
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000058",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 44,
+      "tick": 3,
+      "to": "CHR_0004",
+      "trustAfter": 86,
+      "trustBefore": 68
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000059",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 45,
+      "tick": 3,
+      "to": "CHR_0003",
+      "trustAfter": 66,
+      "trustBefore": 58
+    },
+    {
+      "eventId": "EVT_000060",
+      "kind": "MissionOutcome",
+      "outcome": "success",
+      "participants": [
+        "CHR_0001",
+        "CHR_0002",
+        "CHR_0004",
+        "CHR_0003"
+      ],
+      "seq": 46,
+      "summary": "세인:RESCUE 라온:RESCUE 세라:RESCUE",
+      "tick": 3
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000061",
+      "kind": "WorldDiscovery",
+      "seq": 47,
+      "tick": 4,
+      "what": "tower_floor_4"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000062",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 48,
+      "tick": 4,
+      "to": "CHR_0001",
+      "trustAfter": 68,
+      "trustBefore": 50
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000063",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 49,
+      "tick": 4,
+      "to": "CHR_0004",
+      "trustAfter": 58,
+      "trustBefore": 50
+    },
+    {
+      "eventId": "EVT_000065",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0064",
+      "owner": "CHR_0001",
+      "seq": 50,
+      "tag": "rescued_ally",
+      "tick": 4
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000066",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 51,
+      "tick": 4,
+      "to": "CHR_0002",
+      "trustAfter": 76,
+      "trustBefore": 58
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000067",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 52,
+      "tick": 4,
+      "to": "CHR_0004",
+      "trustAfter": 76,
+      "trustBefore": 68
+    },
+    {
+      "eventId": "EVT_000069",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0068",
+      "owner": "CHR_0002",
+      "seq": 53,
+      "tag": "rescued_ally",
+      "tick": 4
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000070",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 54,
+      "tick": 4,
+      "to": "CHR_0003",
+      "trustAfter": 84,
+      "trustBefore": 66
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000071",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 55,
+      "tick": 4,
+      "to": "CHR_0004",
+      "trustAfter": 94,
+      "trustBefore": 86
+    },
+    {
+      "eventId": "EVT_000073",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0072",
+      "owner": "CHR_0003",
+      "seq": 56,
+      "tag": "rescued_ally",
+      "tick": 4
+    },
+    {
+      "eventId": "EVT_000074",
+      "kind": "MissionOutcome",
+      "outcome": "success",
+      "participants": [
+        "CHR_0001",
+        "CHR_0002",
+        "CHR_0003",
+        "CHR_0004"
+      ],
+      "seq": 57,
+      "summary": "세인:RESCUE 라온:RESCUE 이린:RESCUE",
+      "tick": 4
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000075",
+      "kind": "WorldDiscovery",
+      "seq": 58,
+      "tick": 5,
+      "what": "tower_floor_5"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000076",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 59,
+      "tick": 5,
+      "to": "CHR_0001",
+      "trustAfter": 86,
+      "trustBefore": 68
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000077",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 60,
+      "tick": 5,
+      "to": "CHR_0004",
+      "trustAfter": 66,
+      "trustBefore": 58
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000078",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 61,
+      "tick": 5,
+      "to": "CHR_0002",
+      "trustAfter": 94,
+      "trustBefore": 76
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000079",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 62,
+      "tick": 5,
+      "to": "CHR_0004",
+      "trustAfter": 84,
+      "trustBefore": 76
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000080",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 63,
+      "tick": 5,
+      "to": "CHR_0003",
+      "trustAfter": 100,
+      "trustBefore": 84
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000081",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 64,
+      "tick": 5,
+      "to": "CHR_0004",
+      "trustAfter": 100,
+      "trustBefore": 94
+    },
+    {
+      "eventId": "EVT_000082",
+      "kind": "MissionOutcome",
+      "outcome": "success",
+      "participants": [
+        "CHR_0001",
+        "CHR_0002",
+        "CHR_0003",
+        "CHR_0004"
+      ],
+      "seq": 65,
+      "summary": "세인:RESCUE 라온:RESCUE 이린:RESCUE",
+      "tick": 5
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000083",
+      "kind": "WorldDiscovery",
+      "seq": 66,
+      "tick": 6,
+      "what": "tower_floor_6"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000084",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 67,
+      "tick": 6,
+      "to": "CHR_0002",
+      "trustAfter": 100,
+      "trustBefore": 94
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000085",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 68,
+      "tick": 6,
+      "to": "CHR_0003",
+      "trustAfter": 92,
+      "trustBefore": 84
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000086",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 69,
+      "tick": 6,
+      "to": "CHR_0004",
+      "trustAfter": 100,
+      "trustBefore": 100
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000087",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 70,
+      "tick": 6,
+      "to": "CHR_0003",
+      "trustAfter": 100,
+      "trustBefore": 100
+    },
+    {
+      "eventId": "EVT_000088",
+      "kind": "MissionOutcome",
+      "outcome": "success",
+      "participants": [
+        "CHR_0001",
+        "CHR_0002",
+        "CHR_0004",
+        "CHR_0003"
+      ],
+      "seq": 71,
+      "summary": "세인:RETREAT 라온:RESCUE 세라:RESCUE",
+      "tick": 6
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000089",
+      "kind": "WorldDiscovery",
+      "seq": 72,
+      "tick": 7,
+      "what": "tower_floor_7"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000090",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 73,
+      "tick": 7,
+      "to": "CHR_0004",
+      "trustAfter": 100,
+      "trustBefore": 100
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000091",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 74,
+      "tick": 7,
+      "to": "CHR_0003",
+      "trustAfter": 100,
+      "trustBefore": 100
+    },
+    {
+      "eventId": "EVT_000092",
+      "kind": "MissionOutcome",
+      "outcome": "success",
+      "participants": [
+        "CHR_0001",
+        "CHR_0002",
+        "CHR_0004",
+        "CHR_0003"
+      ],
+      "seq": 75,
+      "summary": "세인:RETREAT 라온:RETREAT 세라:RESCUE",
+      "tick": 7
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000093",
+      "kind": "WorldDiscovery",
+      "seq": 76,
+      "tick": 8,
+      "what": "tower_floor_8"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000094",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 77,
+      "tick": 8,
+      "to": "CHR_0001",
+      "trustAfter": 86,
+      "trustBefore": 68
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000095",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 78,
+      "tick": 8,
+      "to": "CHR_0002",
+      "trustAfter": 66,
+      "trustBefore": 58
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000096",
+      "from": "CHR_0002",
+      "kind": "RelationshipChange",
+      "seq": 79,
+      "tick": 8,
+      "to": "CHR_0003",
+      "trustAfter": 100,
+      "trustBefore": 92
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000097",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 80,
+      "tick": 8,
+      "to": "CHR_0002",
+      "trustAfter": 100,
+      "trustBefore": 100
+    },
+    {
+      "eventId": "EVT_000098",
+      "kind": "MissionOutcome",
+      "outcome": "success",
+      "participants": [
+        "CHR_0001",
+        "CHR_0003",
+        "CHR_0004",
+        "CHR_0002"
+      ],
+      "seq": 81,
+      "summary": "세인:RESCUE 이린:RESCUE 세라:RETREAT",
+      "tick": 8
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000099",
+      "kind": "WorldDiscovery",
+      "seq": 82,
+      "tick": 9,
+      "what": "tower_floor_9"
+    },
+    {
+      "cause": "abandoned",
+      "eventId": "EVT_000100",
+      "kind": "Death",
+      "seq": 83,
+      "subject": "CHR_0002",
+      "tick": 9,
+      "witnesses": [
+        "CHR_0001",
+        "CHR_0003",
+        "CHR_0004"
+      ]
+    },
+    {
+      "eventId": "EVT_000101",
+      "from": "CHR_0002",
+      "inheritedMemories": [],
+      "kind": "LegacyCreation",
+      "relics": [],
+      "seq": 84,
+      "tick": 9
+    },
+    {
+      "eventId": "EVT_000103",
+      "importance": 90,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0102",
+      "owner": "CHR_0001",
+      "seq": 85,
+      "tag": "ally_died_unrescued",
+      "tick": 9
+    },
+    {
+      "eventId": "EVT_000105",
+      "importance": 90,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0104",
+      "owner": "CHR_0003",
+      "seq": 86,
+      "tag": "ally_died_unrescued",
+      "tick": 9
+    },
+    {
+      "eventId": "EVT_000107",
+      "importance": 90,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0106",
+      "owner": "CHR_0004",
+      "seq": 87,
+      "tag": "ally_died_unrescued",
+      "tick": 9
+    },
+    {
+      "eventId": "EVT_000108",
+      "kind": "MissionOutcome",
+      "outcome": "partial",
+      "participants": [
+        "CHR_0001",
+        "CHR_0003",
+        "CHR_0004",
+        "CHR_0002"
+      ],
+      "seq": 88,
+      "summary": "세인:RETREAT 이린:RETREAT 세라:RETREAT",
+      "tick": 9
+    },
+    {
+      "discoveredBy": "CHR_0001",
+      "eventId": "EVT_000109",
+      "kind": "WorldDiscovery",
+      "seq": 89,
+      "tick": 10,
+      "what": "tower_floor_10"
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000110",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 90,
+      "tick": 10,
+      "to": "CHR_0003",
+      "trustAfter": 84,
+      "trustBefore": 66
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000111",
+      "from": "CHR_0003",
+      "kind": "RelationshipChange",
+      "seq": 91,
+      "tick": 10,
+      "to": "CHR_0001",
+      "trustAfter": 94,
+      "trustBefore": 86
+    },
+    {
+      "eventId": "EVT_000113",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0112",
+      "owner": "CHR_0003",
+      "seq": 92,
+      "tag": "rescued_ally",
+      "tick": 10
+    },
+    {
+      "cause": "killed_by_enemy",
+      "eventId": "EVT_000114",
+      "kind": "Death",
+      "seq": 93,
+      "subject": "CHR_0003",
+      "tick": 10,
+      "witnesses": [
+        "CHR_0001"
+      ]
+    },
+    {
+      "eventId": "EVT_000115",
+      "from": "CHR_0003",
+      "inheritedMemories": [
+        "MEM_0104"
+      ],
+      "kind": "LegacyCreation",
+      "relics": [],
+      "seq": 94,
+      "tick": 10
+    },
+    {
+      "cause": "rescued_by",
+      "eventId": "EVT_000116",
+      "from": "CHR_0001",
+      "kind": "RelationshipChange",
+      "seq": 95,
+      "tick": 10,
+      "to": "CHR_0004",
+      "trustAfter": 84,
+      "trustBefore": 66
+    },
+    {
+      "cause": "rescued_them",
+      "eventId": "EVT_000117",
+      "from": "CHR_0004",
+      "kind": "RelationshipChange",
+      "seq": 96,
+      "tick": 10,
+      "to": "CHR_0001",
+      "trustAfter": 94,
+      "trustBefore": 86
+    },
+    {
+      "eventId": "EVT_000119",
+      "importance": 55,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0118",
+      "owner": "CHR_0004",
+      "seq": 97,
+      "tag": "rescued_ally",
+      "tick": 10
+    },
+    {
+      "cause": "killed_by_enemy",
+      "eventId": "EVT_000120",
+      "kind": "Death",
+      "seq": 98,
+      "subject": "CHR_0004",
+      "tick": 10,
+      "witnesses": [
+        "CHR_0001"
+      ]
+    },
+    {
+      "eventId": "EVT_000121",
+      "from": "CHR_0004",
+      "inheritedMemories": [
+        "MEM_0106"
+      ],
+      "kind": "LegacyCreation",
+      "relics": [],
+      "seq": 99,
+      "tick": 10
+    },
+    {
+      "eventId": "EVT_000123",
+      "importance": 60,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0122",
+      "owner": "CHR_0001",
+      "seq": 100,
+      "tag": "witnessed_ally_death",
+      "tick": 10
+    },
+    {
+      "eventId": "EVT_000125",
+      "importance": 60,
+      "kind": "MajorMemory",
+      "memoryId": "MEM_0124",
+      "owner": "CHR_0001",
+      "seq": 101,
+      "tag": "witnessed_ally_death",
+      "tick": 10
+    },
+    {
+      "eventId": "EVT_000126",
+      "kind": "MissionOutcome",
+      "outcome": "partial",
+      "participants": [
+        "CHR_0003",
+        "CHR_0004",
+        "CHR_0001"
+      ],
+      "seq": 102,
+      "summary": "이린:RESCUE 세라:RESCUE",
+      "tick": 10
+    }
+  ],
+  "idCounter": 126,
+  "instances": [
+    {
+      "emotion": {
+        "fear": 20
+      },
+      "goals": [
+        {
+          "createdAtTick": 9,
+          "goalId": "GOL_CHR_0001_never_abandon",
+          "kind": "never_abandon_ally",
+          "priority": 85,
+          "sourceMemory": "MEM_0102"
+        }
+      ],
+      "identity": {
+        "bornAtTick": 0,
+        "definitionId": "CHD_vanguard",
+        "name": "세인"
+      },
+      "instanceId": "CHR_0001",
+      "legacy": {
+        "inheritedMemories": [],
+        "relics": [],
+        "reputation": 0
+      },
+      "memory": [
+        {
+          "atTick": 3,
+          "importance": 58,
+          "kind": "Social",
+          "memoryId": "MEM_0020",
+          "subject": "CHR_0003",
+          "tag": "rescued_ally",
+          "text": "이린을 적 앞에서 끌어냈다."
+        },
+        {
+          "atTick": 8,
+          "importance": 60,
+          "kind": "Episodic",
+          "memoryId": "MEM_0022",
+          "tag": "wounded_in_rescue",
+          "text": "그 대가로 깊은 상처를 입었다."
+        },
+        {
+          "atTick": 8,
+          "importance": 58,
+          "kind": "Social",
+          "memoryId": "MEM_0040",
+          "subject": "CHR_0002",
+          "tag": "rescued_ally",
+          "text": "라온을 적 앞에서 끌어냈다."
+        },
+        {
+          "atTick": 5,
+          "importance": 58,
+          "kind": "Social",
+          "memoryId": "MEM_0064",
+          "subject": "CHR_0004",
+          "tag": "rescued_ally",
+          "text": "세라를 적 앞에서 끌어냈다."
+        },
+        {
+          "atTick": 9,
+          "importance": 90,
+          "kind": "Social",
+          "memoryId": "MEM_0102",
+          "subject": "CHR_0002",
+          "tag": "ally_died_unrescued",
+          "text": "내가 물러섰고, 라온은 거기서 죽었다."
+        },
+        {
+          "atTick": 10,
+          "importance": 60,
+          "kind": "Social",
+          "memoryId": "MEM_0122",
+          "subject": "CHR_0003",
+          "tag": "witnessed_ally_death",
+          "text": "이린은 눈앞에서 죽었다."
+        },
+        {
+          "atTick": 10,
+          "importance": 60,
+          "kind": "Social",
+          "memoryId": "MEM_0124",
+          "subject": "CHR_0004",
+          "tag": "witnessed_ally_death",
+          "text": "세라는 눈앞에서 죽었다."
+        }
+      ],
+      "needs": {
+        "fatigue": 54,
+        "health": 55,
+        "maxHealth": 100
+      },
+      "personality": {
+        "aggression": 71,
+        "honesty": 30,
+        "loyalty": 81,
+        "risk": 60,
+        "sociability": 58
+      },
+      "relationships": [
+        {
+          "target": "CHR_0002",
+          "trust": 66
+        },
+        {
+          "target": "CHR_0003",
+          "trust": 84
+        },
+        {
+          "target": "CHR_0004",
+          "trust": 84
+        }
+      ],
+      "status": "alive"
+    },
+    {
+      "emotion": {
+        "fear": 30
+      },
+      "goals": [],
+      "identity": {
+        "bornAtTick": 0,
+        "definitionId": "CHD_vanguard",
+        "name": "라온"
+      },
+      "instanceId": "CHR_0002",
+      "legacy": {
+        "diedAtTick": 9,
+        "inheritedMemories": [],
+        "relics": [],
+        "reputation": 0
+      },
+      "memory": [
+        {
+          "atTick": 6,
+          "importance": 61,
+          "kind": "Social",
+          "memoryId": "MEM_0026",
+          "subject": "CHR_0003",
+          "tag": "rescued_ally",
+          "text": "이린을 적 앞에서 끌어냈다."
+        },
+        {
+          "atTick": 6,
+          "importance": 57,
+          "kind": "Episodic",
+          "memoryId": "MEM_0028",
+          "tag": "wounded_in_rescue",
+          "text": "그 대가로 깊은 상처를 입었다."
+        },
+        {
+          "atTick": 5,
+          "importance": 58,
+          "kind": "Social",
+          "memoryId": "MEM_0068",
+          "subject": "CHR_0004",
+          "tag": "rescued_ally",
+          "text": "세라를 적 앞에서 끌어냈다."
+        }
+      ],
+      "needs": {
+        "fatigue": 36,
+        "health": 0,
+        "maxHealth": 100
+      },
+      "personality": {
+        "aggression": 55,
+        "honesty": 50,
+        "loyalty": 67,
+        "risk": 54,
+        "sociability": 41
+      },
+      "relationships": [
+        {
+          "target": "CHR_0001",
+          "trust": 86
+        },
+        {
+          "target": "CHR_0003",
+          "trust": 100
+        },
+        {
+          "target": "CHR_0004",
+          "trust": 84
+        }
+      ],
+      "status": "dead"
+    },
+    {
+      "emotion": {
+        "fear": 47
+      },
+      "goals": [
+        {
+          "createdAtTick": 9,
+          "goalId": "GOL_CHR_0003_never_abandon",
+          "kind": "never_abandon_ally",
+          "priority": 85,
+          "sourceMemory": "MEM_0104"
+        }
+      ],
+      "identity": {
+        "bornAtTick": 0,
+        "definitionId": "CHD_scout",
+        "name": "이린"
+      },
+      "instanceId": "CHR_0003",
+      "legacy": {
+        "diedAtTick": 10,
+        "inheritedMemories": [],
+        "relics": [],
+        "reputation": 0
+      },
+      "memory": [
+        {
+          "atTick": 8,
+          "importance": 58,
+          "kind": "Social",
+          "memoryId": "MEM_0044",
+          "subject": "CHR_0002",
+          "tag": "rescued_ally",
+          "text": "라온을 적 앞에서 끌어냈다."
+        },
+        {
+          "atTick": 10,
+          "importance": 57,
+          "kind": "Episodic",
+          "memoryId": "MEM_0046",
+          "tag": "wounded_in_rescue",
+          "text": "그 대가로 깊은 상처를 입었다."
+        },
+        {
+          "atTick": 5,
+          "importance": 58,
+          "kind": "Social",
+          "memoryId": "MEM_0072",
+          "subject": "CHR_0004",
+          "tag": "rescued_ally",
+          "text": "세라를 적 앞에서 끌어냈다."
+        },
+        {
+          "atTick": 9,
+          "importance": 90,
+          "kind": "Social",
+          "memoryId": "MEM_0104",
+          "subject": "CHR_0002",
+          "tag": "ally_died_unrescued",
+          "text": "내가 물러섰고, 라온은 거기서 죽었다."
+        },
+        {
+          "atTick": 10,
+          "importance": 55,
+          "kind": "Social",
+          "memoryId": "MEM_0112",
+          "subject": "CHR_0001",
+          "tag": "rescued_ally",
+          "text": "세인을 적 앞에서 끌어냈다."
+        }
+      ],
+      "needs": {
+        "fatigue": 36,
+        "health": 0,
+        "maxHealth": 80
+      },
+      "personality": {
+        "aggression": 55,
+        "honesty": 60,
+        "loyalty": 52,
+        "risk": 51,
+        "sociability": 47
+      },
+      "relationships": [
+        {
+          "target": "CHR_0001",
+          "trust": 94
+        },
+        {
+          "target": "CHR_0002",
+          "trust": 100
+        },
+        {
+          "target": "CHR_0004",
+          "trust": 100
+        }
+      ],
+      "status": "dead"
+    },
+    {
+      "emotion": {
+        "fear": 44
+      },
+      "goals": [
+        {
+          "createdAtTick": 9,
+          "goalId": "GOL_CHR_0004_never_abandon",
+          "kind": "never_abandon_ally",
+          "priority": 85,
+          "sourceMemory": "MEM_0106"
+        }
+      ],
+      "identity": {
+        "bornAtTick": 0,
+        "definitionId": "CHD_scout",
+        "name": "세라"
+      },
+      "instanceId": "CHR_0004",
+      "legacy": {
+        "diedAtTick": 10,
+        "inheritedMemories": [],
+        "relics": [],
+        "reputation": 0
+      },
+      "memory": [
+        {
+          "atTick": 7,
+          "importance": 64,
+          "kind": "Social",
+          "memoryId": "MEM_0032",
+          "subject": "CHR_0003",
+          "tag": "rescued_ally",
+          "text": "이린을 적 앞에서 끌어냈다."
+        },
+        {
+          "atTick": 10,
+          "importance": 60,
+          "kind": "Episodic",
+          "memoryId": "MEM_0034",
+          "tag": "wounded_in_rescue",
+          "text": "그 대가로 깊은 상처를 입었다."
+        },
+        {
+          "atTick": 2,
+          "importance": 55,
+          "kind": "Social",
+          "memoryId": "MEM_0050",
+          "subject": "CHR_0002",
+          "tag": "rescued_ally",
+          "text": "라온을 적 앞에서 끌어냈다."
+        },
+        {
+          "atTick": 9,
+          "importance": 90,
+          "kind": "Social",
+          "memoryId": "MEM_0106",
+          "subject": "CHR_0002",
+          "tag": "ally_died_unrescued",
+          "text": "내가 물러섰고, 라온은 거기서 죽었다."
+        },
+        {
+          "atTick": 10,
+          "importance": 55,
+          "kind": "Social",
+          "memoryId": "MEM_0118",
+          "subject": "CHR_0001",
+          "tag": "rescued_ally",
+          "text": "세인을 적 앞에서 끌어냈다."
+        }
+      ],
+      "needs": {
+        "fatigue": 48,
+        "health": 0,
+        "maxHealth": 80
+      },
+      "personality": {
+        "aggression": 40,
+        "honesty": 69,
+        "loyalty": 54,
+        "risk": 66,
+        "sociability": 78
+      },
+      "relationships": [
+        {
+          "target": "CHR_0001",
+          "trust": 94
+        },
+        {
+          "target": "CHR_0002",
+          "trust": 94
+        },
+        {
+          "target": "CHR_0003",
+          "trust": 100
+        }
+      ],
+      "status": "dead"
+    }
+  ],
+  "rngState": 2143772499,
+  "tick": 10,
+  "version": 1
+}

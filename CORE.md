@@ -13,7 +13,7 @@ npm run demo      # 4명 시나리오 텍스트 로그 (샘플: docs/logs/core-g
 npm run compare   # 판단 비교표 (샘플: docs/logs/decision-comparison.md)
 npm run tower     # 탑 10층 등반 (샘플: docs/logs/tower-climb-sample.txt)
 npm run tower:stats  # 명령별 결과 분포 (샘플: docs/logs/tower-balance.txt)
-npm run check     # 타입 검사 + 테스트 58개
+npm run check     # 타입 검사 + 테스트 83개
 ```
 
 스택: TypeScript (strict) / Node 22 / vitest. 엔진·렌더러·서버·LLM 없음.
@@ -25,7 +25,7 @@ npm run check     # 타입 검사 + 테스트 58개
 | A(fear=20, trust=80) → RESCUE | 통과 | `tests/decision.test.ts` |
 | B(fear=80, trust=20) → RETREAT | 통과 | 같음 |
 | 행동 후 State 변화 (A 부상/신뢰↑, B 동료사망 목격→MajorMemory) | 통과 | 같음 |
-| 저장 → **프로세스 재시작** → 복원 → 동일 State·동일 Event Log | 통과 | `tests/persistence.test.ts` (자식 프로세스로 검증) |
+| 저장 → **프로세스 재시작** → 복원 → 동일 State·동일 Event Log | 통과 | `tests/persistence.test.ts` (자식 프로세스로 검증) + `unity/.../SnapshotTests.cs` (C#도 같은 바이트) |
 | 같은 상황 재투입 시 다른 판단 | 통과 (4명 전원 뒤집힘) | `tests/decision.test.ts` |
 | LLM 호출 0회 | 통과 | `tests/contract.test.ts` (fetch 스파이 + src 정적 검사) |
 
@@ -145,7 +145,7 @@ src/
 ├── log/                     텍스트 렌더러 (판단 함수 호출 금지) + 조사 처리
 ├── scenario/                coreGameplay (증명) / towerRun (등반)
 ├── data/definitions.ts      Definition 2개
-└── cli/                     demo / compare / tower / towerStats / verifyRestore
+└── cli/                     demo / compare / tower / towerStats / gateStats / golden / verifyRestore
 ```
 
 ## CORE CONTRACT 8개 규칙이 어디에 있나
@@ -154,7 +154,7 @@ src/
 |---|---|---|
 | 1. 4단 분리 | `core/{definition,instance,agentState,actor}.ts` + `ids.ts` branded type | AgentState 미저장, 판단 모듈의 의존 방향, 스냅샷 불변성 |
 | 2. State Contract 8도메인 | `instance.ts` `CharacterInstance` | 타입으로 강제 |
-| 3. Event 6종 append-only | `events.ts` | 6종 외 기록 없음 / 수정·삭제 메서드 없음 / seq 연속 |
+| 3. Event 6종 append-only + Snapshot | `events.ts`, `persistence/` (C#: `Persistence/`) | 6종 외 기록 없음 / 수정·삭제 메서드 없음 / seq 연속 / 두 언어의 세이브 바이트 일치 |
 | 4. 트랜잭션 경유 | `transaction.ts` + `transactions/`, `sim/resolve.ts` | 검증 실패 시 무변경 |
 | 5. L0→L2→L1, LLM 배제 | `decision/` | fetch 0회 + src 정적 검사 |
 | 6. 모든 판단에 ReasonCode | `reason.ts`, 렌더러 2개가 같은 ReasonCode 사용 | 브리핑 예시 3개와 문자열 일치 |

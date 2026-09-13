@@ -23,23 +23,9 @@ namespace LivingWorld.Core.Tests
     [TestFixture]
     public class GoldenTests
     {
-        private static string GoldenDir()
-        {
-            var dir = new DirectoryInfo(AppContext.BaseDirectory);
-            while (dir != null)
-            {
-                string candidate = Path.Combine(dir.FullName, "golden");
-                if (Directory.Exists(candidate)) return candidate;
-                dir = dir.Parent;
-            }
-            throw new DirectoryNotFoundException(
-                "golden/ 를 찾지 못했다. 레포 루트에서 `npm run golden` 을 먼저 실행할 것.");
-        }
-
         private static JsonElement Load(string name)
         {
-            string path = Path.Combine(GoldenDir(), name);
-            using var doc = JsonDocument.Parse(File.ReadAllText(path));
+            using var doc = JsonDocument.Parse(TestPaths.ReadGolden(name));
             return doc.RootElement.Clone();
         }
 
