@@ -11,7 +11,9 @@
 npm install
 npm run demo      # 4명 시나리오 텍스트 로그 (샘플: docs/logs/core-gameplay-sample.txt)
 npm run compare   # 판단 비교표 (샘플: docs/logs/decision-comparison.md)
-npm run check     # 타입 검사 + 테스트 40개
+npm run tower     # 탑 10층 등반 (샘플: docs/logs/tower-climb-sample.txt)
+npm run tower:stats  # 명령별 결과 분포 (샘플: docs/logs/tower-balance.txt)
+npm run check     # 타입 검사 + 테스트 58개
 ```
 
 스택: TypeScript (strict) / Node 22 / vitest. 엔진·렌더러·서버·LLM 없음.
@@ -34,6 +36,7 @@ npm run check     # 타입 검사 + 테스트 40개
 | 캐릭터 State 4명 | fear × trust 2×2로 배치. `scenario/coreGameplay.ts` `squad` |
 | L2 GOAP | 전제조건·효과·비용 기반 균일비용탐색. `decision/{goapActions,l2Goap}.ts` |
 | Memory/Relationship 비교표 | `docs/logs/decision-comparison.md` (`npm run compare`로 재생성) |
+| 탑 10층 미션 | 파티 4명, 층당 위협 상승, 회복/피로 비대칭. `mission/tower.ts` |
 
 ### 실제로 관찰된 판단 변화 (4명, 같은 Definition, 같은 상황)
 
@@ -61,6 +64,56 @@ RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,sourc
 세인은 반대 방향의 증거다. 같은 Definition에서 나왔고 처음엔 구하러 갔지만,
 구조의 대가(부상)가 다음 판단을 바꿨다. 성격이 아니라 **경험**이 갈랐다.
 
+## 탑 10층 미션
+
+층마다: **위협도 상승 → 한 명이 쓰러짐 → 나머지가 각자 판단 → 결과 적용 → 피로 누적.**
+한 명이라도 `RESCUE`하면 쓰러진 동료는 살고, 아무도 안 가면 죽는다.
+
+기본 시드 등반 결과 — 10층 클리어, 4명 중 3명 사망:
+
+```
+[ 9층] 위협도 65  라온은 쓰러졌다
+      세인   RETREAT(fear=48,self_risk=88,trust=68,memory=wounded_in_rescue)
+      → 아무도 오지 않았다. 라온은 죽었다
+
+[10층] 위협도 70  세인은 쓰러졌다
+      이린   RESCUE(target=CHR_0001,trust=86,fear=22,self_risk=92,memory=ally_died_unrescued) 피해 49 (사망)
+      세라   RESCUE(target=CHR_0001,trust=86,fear=19,self_risk=95,memory=ally_died_unrescued) 피해 49 (사망)
+      → 세인은 살아남았다
+
+생존  세인 (hp 55/100, fatigue 54, goals=[never_abandon_ally])
+```
+
+읽는 법: 9층에서 세인이 라온을 버렸고, 그걸 **목격한 이린과 세라에게 기억이 생겼다.**
+10층에서 그 기억이 둘을 움직여 세인을 구하고 둘 다 죽었다. 살아남은 세인은
+자기가 버렸던 기억 때문에 `never_abandon_ally` 목표를 갖게 되었다.
+1대1 증명에서 본 폐루프가 미션 규모에서 그대로 돌아간 것이다.
+
+### 밸런스 — Master 명령이 레버인가
+
+`npm run tower:stats`가 만드는 표 (시드 60개, 각 칸: 평균 도달층 / 클리어율 / 평균 사망자):
+
+| 퇴각선 \ 위험정책 | cautious | balanced | aggressive |
+|---|---|---|---|
+| 없음 | 9.9층 92% 2.12명 | 9.5층 62% 2.58명 | 8.7층 18% 2.98명 |
+| < 0.25 | 9.9층 92% 2.12명 | 9.6층 65% 2.57명 | 9.0층 30% 2.97명 |
+| < 0.4 | 9.9층 90% 1.73명 | 9.7층 73% 2.40명 | 9.5층 68% 2.47명 |
+| < 0.6 | 9.4층 65% 0.88명 | 9.1층 47% 0.55명 | 9.0층 43% 0.55명 |
+
+`riskPolicy`는 클리어율을, `retreatCondition`은 사망자 수를 움직인다.
+즉 Master는 **"얼마나 깊이"와 "얼마나 잃고"를 교환한다.**
+
+### 회복과 피로를 분리한 이유
+
+회복 수단이 없으면 체력은 단조 감소만 하므로 누적 피해가 총 체력을 넘는 층에서 등반이
+**반드시** 멈춘다. 실제로 200회 전부 8층 이상을 못 갔다 — 10층이 존재하지만 아무도 볼 수
+없는 상태였다(클리어율 0%).
+
+그래서 **회복은 체력으로 주고 한계는 피로로 준다.** 층 사이 휴식은 최대 체력의 12%를
+회복시키지만 피로는 줄이지 않는다. 피로는 `stamina`를 깎고, `stamina`는 L2 계획의
+자원이므로 후반 층에서는 연막도 구조도 계획에 넣을 여력이 사라진다.
+정상에 가려면 누군가를 버려야 한다 — 회복을 넣어도 상실의 무게는 남는다.
+
 ## 구조
 
 ```
@@ -85,13 +138,14 @@ src/
 │   ├── l2Goap.ts            L2 플래너 (균일비용탐색)
 │   ├── decide.ts            진입점 L0 → L2 → L1 — LLM 없음
 │   └── reason.ts            ReasonCode
-├── sim/resolve.ts           행동 → 사건 → 죽음 → 기억 → 목표
+├── sim/resolve.ts           조우 결과 — 여러 명의 판단 → 사건 → 죽음 → 기억 → 목표
+├── mission/tower.ts         탑 10층 + 파티 편성 + 층 도달 기록
 ├── transactions/summon.ts   소환
 ├── persistence/             Snapshot + Repository 인터페이스 + JSON 구현
 ├── log/                     텍스트 렌더러 (판단 함수 호출 금지) + 조사 처리
-├── scenario/coreGameplay.ts 시나리오
+├── scenario/                coreGameplay (증명) / towerRun (등반)
 ├── data/definitions.ts      Definition 2개
-└── cli/                     demo / compare / verifyRestore
+└── cli/                     demo / compare / tower / towerStats / verifyRestore
 ```
 
 ## CORE CONTRACT 8개 규칙이 어디에 있나
@@ -107,8 +161,9 @@ src/
 | 7. 죽음은 최종 | `sim/resolve.ts` `killInstance` | Instance 미삭제 + `dead` + LegacyCreation |
 | 8. 중복 = 새 Instance | `instanceFactory.ts` | 다른 ID·이름·성격, 배열 비공유, 이름 유일성 |
 
-L2 GOAP는 계약이 아니라 기능이므로 별도로 검증한다 — `tests/goap.test.ts`
-(계획 순서, 전제조건 준수, 계획 불가 시 하강, 결정론, 피해 감소).
+L2 GOAP와 미션은 계약이 아니라 기능이므로 별도로 검증한다 —
+`tests/goap.test.ts` (계획 순서, 전제조건 준수, 계획 불가 시 하강, 결정론, 피해 감소),
+`tests/mission.test.ts` (편성 효과, 층 기록 중복 방지, 중단 조건 3종, 등반 저장/복원).
 
 ## L2 GOAP 설계
 
@@ -154,11 +209,25 @@ tolerable = 40 + (risk - 50) × 0.6 + healthRatio × 40 − fear × 0.25
 5. **이름은 유일하다.** 규칙 8이 "완전히 다른 이름"을 요구하므로 사용 중인 이름
    (죽은 캐릭터 포함)을 피해서 뽑는다. 풀이 소진되면 서수를 붙인다.
 6. **양방향 신뢰 변화.** 구조하면 구조된 쪽(+18)과 구조한 쪽(+8) 모두 오른다.
-7. **ID·난수·tick이 전부 결정론적이다.** Snapshot에 난수 상태와 ID 카운터를 저장하므로
+7. **ATTACK은 동료를 구하지 않는다.** 한때 구조로 처리했는데, 그러면 동료에게 관심 없는
+   캐릭터가 적에게 달려들면서 우연히 동료를 구한다. 실측에서 편성(신뢰 50)과 미편성(신뢰 0)의
+   구조율이 93% 대 92%로 같아졌다 — 관계가 판단을 바꾼다는 전제가 ATTACK 경로로 새고 있었다.
+   고친 뒤에는 93% 대 85%, 클리어율 65% 대 17%로 갈린다.
+8. **같은 태그의 기억은 새로 쌓지 않고 강화한다.** 10층을 오르면 같은 종류의 사건이 반복되고,
+   그때마다 항목을 추가하면 Instance가 중복 기억으로 부푼다(OPEN-QUESTIONS 6-3).
+   강화는 새 사건이 아니므로 MajorMemory Event를 다시 남기지 않는다.
+9. **피해를 인원수로 나누지 않는다.** 나누면 `self_risk=36`인데 실제 피해가 8이 되어
+   ReasonCode가 다시 거짓이 된다. 협동으로 위험이 줄어드는 모델을 넣으려면 먼저
+   "동료가 올 것이라는 예측"이 판단 입력에 있어야 한다.
+10. **ID·난수·tick이 전부 결정론적이다.** Snapshot에 난수 상태와 ID 카운터를 저장하므로
    복원 후 이어서 소환해도 저장 전과 같은 결과가 나온다.
 
 ## 다음 단계 (브리핑 5절, 지금 만들지 않음)
 
-~~캐릭터 State 4명~~ → ~~L2 GOAP~~ → ~~Memory/Relationship 비교표~~ →
-**10층 미션** → 첫 사망 → History → Legacy → 소환/InstanceFactory 확장 →
-30분 플레이 시나리오로 통합 검증 → LLM 서술 연동.
+~~캐릭터 State 4명~~ → ~~L2 GOAP~~ → ~~Memory/Relationship 비교표~~ → ~~10층 미션~~ →
+~~첫 사망~~(미션에서 실제로 발생) → **History** → **Legacy** →
+소환/InstanceFactory 확장 → 30분 플레이 시나리오로 통합 검증 → LLM 서술 연동.
+
+History와 Legacy의 토대는 깔려 있다: 층 도달은 WorldDiscovery로 남고 이미 발견된 층은
+다시 기록되지 않으며(이벤트 로그가 진실), 사망 시 LegacyCreation이 중요 기억(importance 70+)의
+목록을 남긴다. 아직 **읽어서 쓰는 쪽**이 없다 — 다음 단계가 그것이다.

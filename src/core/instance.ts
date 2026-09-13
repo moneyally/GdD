@@ -70,8 +70,8 @@ export interface MemoryEntry {
  * 문자열 자유 입력을 막아 "기억이 판단을 바꾼다"는 경로를 추적 가능하게 유지한다.
  */
 export type MemoryTag =
-  /** 내가 퇴각해서 동료가 죽었다 */
-  | 'ally_died_by_my_retreat'
+  /** 내가 구하지 않아서 동료가 죽었다 (퇴각·방어·교전 무엇을 했든) */
+  | 'ally_died_unrescued'
   /** 내가 동료를 구했다 */
   | 'rescued_ally'
   /** 구조 중 부상을 입었다 */

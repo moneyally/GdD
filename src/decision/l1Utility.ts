@@ -27,7 +27,7 @@ export const WEIGHTS = {
       rescued_ally: 0.2,
       wounded_in_rescue: -0.25,
       witnessed_ally_death: 0.1,
-      ally_died_by_my_retreat: 0.5,
+      ally_died_unrescued: 0.5,
     },
   },
   retreat: {
@@ -37,7 +37,7 @@ export const WEIGHTS = {
     loyaltyAboveMid: -0.3,
     memory: {
       wounded_in_rescue: 0.3,
-      ally_died_by_my_retreat: -0.3,
+      ally_died_unrescued: -0.3,
       rescued_ally: 0,
       witnessed_ally_death: 0,
     },

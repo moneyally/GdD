@@ -34,6 +34,12 @@ export interface AgentState {
   readonly subject?: InstanceId;
   /** 이 상황에서 자신이 감수할 위험 0..100 */
   readonly selfRisk: number;
+  /**
+   * 행동 여력 0..100. 체력에서 피로를 뺀 값.
+   * L2 계획의 자원이다 — 이게 바닥나면 연막도 구조도 계획에 넣을 수 없다.
+   * 10층을 오르는 동안 누적되는 피로가 후반 층의 판단을 바꾸는 경로가 여기다.
+   */
+  readonly stamina: number;
   readonly memoryInfluences: readonly MemoryInfluence[];
   readonly goals: readonly Goal[];
   readonly order: MasterOrder;
@@ -63,6 +69,7 @@ export function buildAgentState(
     subject: situation.subject,
     trustInSubject: situation.subject ? trustToward(self, situation.subject) : 0,
     selfRisk,
+    stamina: clamp(healthRatio * 100 - self.needs.fatigue, 0, 100),
     memoryInfluences: summarizeMemory(self),
     // 복사한다. Instance의 배열을 그대로 들고 있으면 행동 이후의 변화가
     // '판단 시점 State'에 비쳐서 디버거가 거짓 근거를 보여준다.

@@ -45,9 +45,9 @@
 
 ── 1차 결과 — State 변화 ────────────────────────────────────────
   세인  health=51/100 fear=45  memory=[rescued_ally, wounded_in_rescue]  goals=[]  동료=alive
-  도하  health=100/100 fear=72  memory=[ally_died_by_my_retreat]  goals=[never_abandon_ally]  동료=dead
-  유진  health=100/100 fear=72  memory=[ally_died_by_my_retreat]  goals=[never_abandon_ally]  동료=dead
-  라온  health=100/100 fear=12  memory=[ally_died_by_my_retreat]  goals=[never_abandon_ally]  동료=dead
+  도하  health=100/100 fear=72  memory=[ally_died_unrescued]  goals=[never_abandon_ally]  동료=dead
+  유진  health=100/100 fear=72  memory=[ally_died_unrescued]  goals=[never_abandon_ally]  동료=dead
+  라온  health=100/100 fear=12  memory=[ally_died_unrescued]  goals=[never_abandon_ally]  동료=dead
 
 ── 2차 조우 — 변화된 State 때문에 달라진 판단 ────────────────────────────
   도하의 새 동료: 이린 2 [CHR_0031]
@@ -68,7 +68,7 @@
   도하 [CHR_0004] layer=L2  (판단 시점 State)
     reason   RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,source=MEM_0018 overrides fear=72)
     state    health_ratio=1.00 fear=72 trust=0 self_risk=70
-    memory   ally_died_by_my_retreat(90)
+    memory   ally_died_unrescued(90)
     goals    never_abandon_ally(85)
     utility  (L0에서 결정되어 계산하지 않음)
 
@@ -77,7 +77,7 @@
   유진 [CHR_0007] layer=L2  (판단 시점 State)
     reason   RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,source=MEM_0023 overrides fear=72)
     state    health_ratio=1.00 fear=72 trust=0 self_risk=70
-    memory   ally_died_by_my_retreat(90)
+    memory   ally_died_unrescued(90)
     goals    never_abandon_ally(85)
     utility  (L0에서 결정되어 계산하지 않음)
 
@@ -86,7 +86,7 @@
   라온 [CHR_0008] layer=L2  (판단 시점 State)
     reason   RESCUE(goal=never_abandon_ally,plan=RESCUE→FALL_BACK,cost=5.8,source=MEM_0028 overrides fear=12)
     state    health_ratio=1.00 fear=12 trust=0 self_risk=70
-    memory   ally_died_by_my_retreat(90)
+    memory   ally_died_unrescued(90)
     goals    never_abandon_ally(85)
     utility  (L0에서 결정되어 계산하지 않음)
 
@@ -102,36 +102,36 @@
   #2 tick1 RelationshipChange from=CHR_0003 to=CHR_0001 trustBefore=80 trustAfter=88 cause=rescued_them
   #3 tick1 MajorMemory owner=CHR_0003 memoryId=MEM_0011 tag=rescued_ally importance=55
   #4 tick1 MajorMemory owner=CHR_0003 memoryId=MEM_0013 tag=wounded_in_rescue importance=45
-  #5 tick1 MissionOutcome participants=[CHR_0003|CHR_0001] outcome=success summary=세인: RESCUE
+  #5 tick1 MissionOutcome participants=[CHR_0003|CHR_0001] outcome=success summary=세인:RESCUE
   #6 tick1 Death subject=CHR_0002 cause=abandoned witnesses=[CHR_0004]
   #7 tick1 LegacyCreation from=CHR_0002 relics=[] inheritedMemories=[]
-  #8 tick1 MajorMemory owner=CHR_0004 memoryId=MEM_0018 tag=ally_died_by_my_retreat importance=90
-  #9 tick1 MissionOutcome participants=[CHR_0004|CHR_0002] outcome=partial summary=도하: RETREAT
+  #8 tick1 MajorMemory owner=CHR_0004 memoryId=MEM_0018 tag=ally_died_unrescued importance=90
+  #9 tick1 MissionOutcome participants=[CHR_0004|CHR_0002] outcome=partial summary=도하:RETREAT
   #10 tick1 Death subject=CHR_0005 cause=abandoned witnesses=[CHR_0007]
   #11 tick1 LegacyCreation from=CHR_0005 relics=[] inheritedMemories=[]
-  #12 tick1 MajorMemory owner=CHR_0007 memoryId=MEM_0023 tag=ally_died_by_my_retreat importance=90
-  #13 tick1 MissionOutcome participants=[CHR_0007|CHR_0005] outcome=partial summary=유진: RETREAT
+  #12 tick1 MajorMemory owner=CHR_0007 memoryId=MEM_0023 tag=ally_died_unrescued importance=90
+  #13 tick1 MissionOutcome participants=[CHR_0007|CHR_0005] outcome=partial summary=유진:RETREAT
   #14 tick1 Death subject=CHR_0006 cause=abandoned witnesses=[CHR_0008]
   #15 tick1 LegacyCreation from=CHR_0006 relics=[] inheritedMemories=[]
-  #16 tick1 MajorMemory owner=CHR_0008 memoryId=MEM_0028 tag=ally_died_by_my_retreat importance=90
-  #17 tick1 MissionOutcome participants=[CHR_0008|CHR_0006] outcome=partial summary=라온: RETREAT
+  #16 tick1 MajorMemory owner=CHR_0008 memoryId=MEM_0028 tag=ally_died_unrescued importance=90
+  #17 tick1 MissionOutcome participants=[CHR_0008|CHR_0006] outcome=partial summary=라온:RETREAT
   #18 tick2 Death subject=CHR_0001 cause=abandoned witnesses=[CHR_0003]
   #19 tick2 LegacyCreation from=CHR_0001 relics=[] inheritedMemories=[]
-  #20 tick2 MajorMemory owner=CHR_0003 memoryId=MEM_0036 tag=ally_died_by_my_retreat importance=90
-  #21 tick2 MissionOutcome participants=[CHR_0003|CHR_0001] outcome=partial summary=세인: RETREAT
+  #20 tick2 MajorMemory owner=CHR_0003 memoryId=MEM_0036 tag=ally_died_unrescued importance=90
+  #21 tick2 MissionOutcome participants=[CHR_0003|CHR_0001] outcome=partial summary=세인:RETREAT
   #22 tick2 RelationshipChange from=CHR_0031 to=CHR_0004 trustBefore=50 trustAfter=68 cause=rescued_by
   #23 tick2 RelationshipChange from=CHR_0004 to=CHR_0031 trustBefore=50 trustAfter=58 cause=rescued_them
   #24 tick2 MajorMemory owner=CHR_0004 memoryId=MEM_0041 tag=rescued_ally importance=55
   #25 tick2 MajorMemory owner=CHR_0004 memoryId=MEM_0043 tag=wounded_in_rescue importance=45
-  #26 tick2 MissionOutcome participants=[CHR_0004|CHR_0031] outcome=success summary=도하: RESCUE
+  #26 tick2 MissionOutcome participants=[CHR_0004|CHR_0031] outcome=success summary=도하:RESCUE
   #27 tick2 RelationshipChange from=CHR_0032 to=CHR_0007 trustBefore=50 trustAfter=68 cause=rescued_by
   #28 tick2 RelationshipChange from=CHR_0007 to=CHR_0032 trustBefore=50 trustAfter=58 cause=rescued_them
   #29 tick2 MajorMemory owner=CHR_0007 memoryId=MEM_0048 tag=rescued_ally importance=55
   #30 tick2 MajorMemory owner=CHR_0007 memoryId=MEM_0050 tag=wounded_in_rescue importance=45
-  #31 tick2 MissionOutcome participants=[CHR_0007|CHR_0032] outcome=success summary=유진: RESCUE
+  #31 tick2 MissionOutcome participants=[CHR_0007|CHR_0032] outcome=success summary=유진:RESCUE
   #32 tick2 RelationshipChange from=CHR_0033 to=CHR_0008 trustBefore=50 trustAfter=68 cause=rescued_by
   #33 tick2 RelationshipChange from=CHR_0008 to=CHR_0033 trustBefore=50 trustAfter=58 cause=rescued_them
   #34 tick2 MajorMemory owner=CHR_0008 memoryId=MEM_0055 tag=rescued_ally importance=55
   #35 tick2 MajorMemory owner=CHR_0008 memoryId=MEM_0057 tag=wounded_in_rescue importance=45
-  #36 tick2 MissionOutcome participants=[CHR_0008|CHR_0033] outcome=success summary=라온: RESCUE
+  #36 tick2 MissionOutcome participants=[CHR_0008|CHR_0033] outcome=success summary=라온:RESCUE
 

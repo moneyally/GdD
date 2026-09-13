@@ -67,6 +67,8 @@
 - [`CORE.md`](CORE.md) — **CORE GAMEPLAY 구현 현황** (증명 결과, 구조, 계약 매핑)
 - [`docs/logs/core-gameplay-sample.txt`](docs/logs/core-gameplay-sample.txt) — 실행 로그 샘플 (4명)
 - [`docs/logs/decision-comparison.md`](docs/logs/decision-comparison.md) — **판단 비교표** (기억/관계가 행동을 바꾸는 표)
+- [`docs/logs/tower-climb-sample.txt`](docs/logs/tower-climb-sample.txt) — 탑 10층 등반 로그
+- [`docs/logs/tower-balance.txt`](docs/logs/tower-balance.txt) — Master 명령별 결과 분포
 - [`CHANGELOG.md`](CHANGELOG.md) — v1 → v3.0 변경 이력
 - [`OPEN-QUESTIONS.md`](OPEN-QUESTIONS.md) — **미해결 / 확인 필요 항목** (v3.0에서 누락되거나 충돌하는 내용)
 - [`docs/legacy/v1-initial-design.md`](docs/legacy/v1-initial-design.md) — 초기 설계 문서 37절 (참조용)
@@ -82,7 +84,8 @@
 |---|---|---|
 | 0 Preproduction | 스키마·명명·기기 매트릭스·기술 스파이크 | 진행 중 (문서화 완료) |
 | CORE GAMEPLAY 증명 | 상태가 판단을 바꾸고, 그 결과가 다음 판단을 바꾸는가 | **통과** — [`CORE.md`](CORE.md) |
-| 4명 State / L2 GOAP / 비교표 | 계층형 판단(L0→L2→L1)과 다단계 계획 | **통과** — 테스트 40개 |
+| 4명 State / L2 GOAP / 비교표 | 계층형 판단(L0→L2→L1)과 다단계 계획 | **통과** |
+| 탑 10층 미션 | 파티 등반, 첫 사망, Master 명령이 결과를 바꾸는가 | **통과** — 테스트 58개 |
 | 1 Agent Vertical Slice | 캐릭터 1종이 Spawn → 판단 → 성장 → 저장 → **재접속 후 동일 존재로 복원** | 저장/복원 검증 완료, 나머지 미착수 |
 | 2 Small World | 지역 1개 / NPC 50–100 / 원정 1 / 던전 1 / 최소 경제·길드 | 미착수 |
 | 3 Alpha | 다중 Master, 길드, 거래, 시장, 가챠, 합성, LiveOps | 미착수 |

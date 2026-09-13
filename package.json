@@ -12,7 +12,9 @@
     "test": "vitest run",
     "demo": "tsx src/cli/demo.ts",
     "check": "npm run typecheck && npm run test",
-    "compare": "tsx src/cli/compare.ts"
+    "compare": "tsx src/cli/compare.ts",
+    "tower": "tsx src/cli/tower.ts",
+    "tower:stats": "tsx src/cli/towerStats.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.2",

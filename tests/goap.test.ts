@@ -32,7 +32,7 @@ const GOAL: Goal = {
 };
 
 const MEMORY: MemoryInfluence = {
-  tag: 'ally_died_by_my_retreat',
+  tag: 'ally_died_unrescued',
   importance: 90,
   memoryId: memoryId('0001'),
 };
@@ -46,6 +46,7 @@ function state(overrides: Partial<AgentState> = {}): AgentState {
     subject: instanceId('0101'),
     trustInSubject: 20,
     selfRisk: 70,
+    stamina: 100,
     memoryInfluences: [MEMORY],
     goals: [GOAL],
     order: SCENARIO.order,
@@ -83,7 +84,7 @@ describe('플래너가 내는 계획이 말이 되는가', () => {
 
   it('연막으로도 안 되면 계획이 없다 — L1으로 내려간다', () => {
     // 중상: 체감 위협이 오르고 감당 상한은 내려가 연막으로도 메울 수 없다
-    const s = state({ fear: 80, healthRatio: 0.45, selfRisk: 93 });
+    const s = state({ fear: 80, healthRatio: 0.45, selfRisk: 93, stamina: 45 });
     expect(applyL2(s)).toBeUndefined();
     expect(decide(s).reason.layer).toBe('L1');
   });

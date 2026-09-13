@@ -90,8 +90,8 @@ describe('행동 후 State 변화', () => {
 
     const memoryEvents = world.events.ofKind('MajorMemory');
     expect(memoryEvents).toHaveLength(1);
-    expect(memoryEvents[0]!.tag).toBe('ally_died_by_my_retreat');
-    expect(vanguardB.memory[0]!.tag).toBe('ally_died_by_my_retreat');
+    expect(memoryEvents[0]!.tag).toBe('ally_died_unrescued');
+    expect(vanguardB.memory[0]!.tag).toBe('ally_died_unrescued');
   });
 
   it('죽음은 최종이다 — Instance는 삭제되지 않고 dead로 남는다 (규칙 7)', () => {

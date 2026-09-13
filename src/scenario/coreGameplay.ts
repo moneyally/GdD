@@ -119,11 +119,12 @@ export function runEncounter(
   const state = buildAgentState(actor, situation, SCENARIO.order);
   const decision = decide(state);
 
+  // 1대1 조우는 판단이 하나인 조우다 — 규칙 구현은 파티와 공유한다
   const result = runTransaction(world, ResolveTransaction, {
-    actor: actor.instanceId,
-    action: decision.reason.action,
     situation,
-    plan: decision.plan?.steps,
+    decisions: [
+      { actor: actor.instanceId, action: decision.reason.action, plan: decision.plan?.steps },
+    ],
   });
   if (!result.ok) throw new Error(result.error);
 
@@ -134,7 +135,7 @@ export function runEncounter(
     state,
     decision,
     died: result.value.died,
-    damageTaken: result.value.damageTaken,
+    damageTaken: result.value.damageByActor.get(actor.instanceId) ?? 0,
   };
 }
 

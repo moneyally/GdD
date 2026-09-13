@@ -31,7 +31,7 @@ const FIXED_PERSONALITY: Personality = {
 const SUBJECT = instanceId('9001');
 
 const ABANDON_MEMORY: MemoryInfluence = {
-  tag: 'ally_died_by_my_retreat',
+  tag: 'ally_died_unrescued',
   importance: 90,
   memoryId: memoryId('9001'),
 };
@@ -61,6 +61,7 @@ function buildState(v: Variant): AgentState {
     subject: SUBJECT,
     trustInSubject: v.trust,
     selfRisk: Math.min(100, SCENARIO.enemyThreat * injuryMultiplier),
+    stamina: v.healthRatio * 100,
     memoryInfluences: v.withMemory ? [ABANDON_MEMORY] : [],
     goals: v.withMemory ? [NEVER_ABANDON_GOAL] : [],
     order: SCENARIO.order,
@@ -80,7 +81,7 @@ function table(title: string, note: string, rows: readonly Variant[]): string {
     '',
     note,
     '',
-    '| fear | trust(동료) | 체력 | 기억 없음 | 기억 있음 (`ally_died_by_my_retreat` 90 + 목표) |',
+    '| fear | trust(동료) | 체력 | 기억 없음 | 기억 있음 (`ally_died_unrescued` 90 + 목표) |',
     '|---|---|---|---|---|',
   ];
   for (const row of rows) {

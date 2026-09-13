@@ -10,7 +10,7 @@
 기억이 없으면 **신뢰와 침착이 둘 다 있어야** 구하러 간다. 하나라도 부족하면 물러선다.
 기억이 생기면 네 경우 모두 구하러 간다 — 단, L1 효용이 아니라 L2 계획으로 간다.
 
-| fear | trust(동료) | 체력 | 기억 없음 | 기억 있음 (`ally_died_by_my_retreat` 90 + 목표) |
+| fear | trust(동료) | 체력 | 기억 없음 | 기억 있음 (`ally_died_unrescued` 90 + 목표) |
 |---|---|---|---|---|
 | 20 | 80 | 1.00 | RESCUE `L1` | RESCUE `L2` RESCUE→FALL_BACK |
 | 80 | 20 | 1.00 | RETREAT `L1` | RESCUE `L2` SUPPRESS→RESCUE→FALL_BACK |
@@ -24,7 +24,7 @@
 체력 0.50에서는 **계획 없이 감정만으로** 뛰어들고, 0.40에서는 결국 물러선다.
 기억은 캐릭터를 무적으로 만들지 않는다.
 
-| fear | trust(동료) | 체력 | 기억 없음 | 기억 있음 (`ally_died_by_my_retreat` 90 + 목표) |
+| fear | trust(동료) | 체력 | 기억 없음 | 기억 있음 (`ally_died_unrescued` 90 + 목표) |
 |---|---|---|---|---|
 | 20 | 20 | 1.00 | RETREAT `L1` | RESCUE `L2` RESCUE→FALL_BACK |
 | 20 | 20 | 0.80 | RETREAT `L1` | RESCUE `L2` SUPPRESS→RESCUE→FALL_BACK |
@@ -68,7 +68,7 @@
   ```
 - 중상 · **기억 있음** (계획 불가 → 목표 포기)
   ```
-  RETREAT(fear=20,self_risk=95,trust=20,memory=ally_died_by_my_retreat)
+  RETREAT(fear=20,self_risk=95,trust=20,memory=ally_died_unrescued)
   ```
 
 ---

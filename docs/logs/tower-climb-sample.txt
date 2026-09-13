@@ -1,0 +1,89 @@
+
+── 파티 편성 (seed=77001) ────────────────────────────────────────
+  세인   [CHR_0001] CHD_vanguard   risk=60 loyalty=81 hp=100
+  라온   [CHR_0002] CHD_vanguard   risk=54 loyalty=67 hp=100
+  이린   [CHR_0003] CHD_scout      risk=51 loyalty=52 hp=80
+  세라   [CHR_0004] CHD_scout      risk=66 loyalty=54 hp=80
+
+── 등반 ────────────────────────────────────────────────────────
+
+  [ 1층] 위협도 25  이린은 쓰러졌다  ★ 최초 도달
+        세인   RESCUE(target=CHR_0003,trust=50,fear=0,self_risk=25)                     피해 18
+        라온   RESCUE(target=CHR_0003,trust=50,fear=0,self_risk=25)                     피해 18
+        세라   RESCUE(target=CHR_0003,trust=50,fear=0,self_risk=25)                     피해 18
+        → 이린은 살아남았다
+
+  [ 2층] 위협도 30  라온은 쓰러졌다  ★ 최초 도달
+        세인   RESCUE(target=CHR_0002,trust=50,fear=5,self_risk=31,memory=wounded_in_rescue) 피해 21
+        이린   RESCUE(target=CHR_0002,trust=68,fear=0,self_risk=30)                     피해 21
+        세라   RESCUE(target=CHR_0002,trust=50,fear=5,self_risk=32,memory=wounded_in_rescue) 피해 21
+        → 라온은 살아남았다
+
+  [ 3층] 위협도 35  이린은 쓰러졌다  ★ 최초 도달
+        세인   RESCUE(target=CHR_0003,trust=58,fear=12,self_risk=38,memory=wounded_in_rescue) 피해 25
+        라온   RESCUE(target=CHR_0003,trust=76,fear=1,self_risk=35,memory=wounded_in_rescue) 피해 25
+        세라   RESCUE(target=CHR_0003,trust=58,fear=12,self_risk=40,memory=wounded_in_rescue) 피해 25
+        → 이린은 살아남았다
+
+  [ 4층] 위협도 40  세라는 쓰러졌다  ★ 최초 도달
+        세인   RESCUE(target=CHR_0004,trust=50,fear=21,self_risk=47,memory=wounded_in_rescue) 피해 28
+        라온   RESCUE(target=CHR_0004,trust=68,fear=10,self_risk=43,memory=wounded_in_rescue) 피해 28
+        이린   RESCUE(target=CHR_0004,trust=86,fear=3,self_risk=40,memory=wounded_in_rescue) 피해 28
+        → 세라는 살아남았다
+
+  [ 5층] 위협도 45  세라는 쓰러졌다  ★ 최초 도달
+        세인   RESCUE(target=CHR_0004,trust=58,fear=31,self_risk=57,memory=wounded_in_rescue) 피해 31
+        라온   RESCUE(target=CHR_0004,trust=76,fear=20,self_risk=53,memory=wounded_in_rescue) 피해 31
+        이린   RESCUE(target=CHR_0004,trust=94,fear=13,self_risk=51,memory=wounded_in_rescue) 피해 31
+        → 세라는 살아남았다
+
+  [ 6층] 위협도 50  이린은 쓰러졌다  ★ 최초 도달
+        세인   RETREAT(fear=43,self_risk=69,trust=66,memory=wounded_in_rescue)          피해  0
+        라온   RESCUE(target=CHR_0003,trust=84,fear=32,self_risk=64,memory=wounded_in_rescue) 피해 35
+        세라   RESCUE(target=CHR_0003,trust=100,fear=13,self_risk=55,memory=wounded_in_rescue) 피해 35
+        → 이린은 살아남았다
+
+  [ 7층] 위협도 55  이린은 쓰러졌다  ★ 최초 도달
+        세인   RETREAT(fear=31,self_risk=72,trust=66,memory=wounded_in_rescue)          피해  0
+        라온   RETREAT(fear=46,self_risk=78,trust=92,memory=wounded_in_rescue)          피해  0
+        세라   RESCUE(target=CHR_0003,trust=100,fear=27,self_risk=71,memory=wounded_in_rescue) 피해 39
+        → 이린은 살아남았다
+
+  [ 8층] 위협도 60  라온은 쓰러졌다  ★ 최초 도달
+        세인   RESCUE(target=CHR_0002,trust=58,fear=19,self_risk=74,memory=wounded_in_rescue) 피해 42
+        이린   RESCUE(target=CHR_0002,trust=100,fear=17,self_risk=69,memory=wounded_in_rescue) 피해 42
+        세라   RETREAT(health_ratio=0.15<threshold=0.25,order=retreat_condition)        피해  0
+        → 라온은 살아남았다
+
+  [ 9층] 위협도 65  라온은 쓰러졌다  ★ 최초 도달
+        세인   RETREAT(fear=36,self_risk=92,trust=66,memory=wounded_in_rescue)          피해  0
+        이린   RETREAT(fear=34,self_risk=90,trust=100,memory=wounded_in_rescue)         피해  0
+        세라   RETREAT(fear=31,self_risk=93,trust=94,memory=wounded_in_rescue)          피해  0
+        → 아무도 오지 않았다. 라온은 죽었다
+
+  [10층] 위협도 70  세인은 쓰러졌다  ★ 최초 도달
+        이린   RESCUE(target=CHR_0001,trust=86,fear=22,self_risk=92,memory=ally_died_unrescued) 피해 49  (사망)
+        세라   RESCUE(target=CHR_0001,trust=86,fear=19,self_risk=95,memory=ally_died_unrescued) 피해 49  (사망)
+        → 세인은 살아남았다
+
+── 결과 ────────────────────────────────────────────────────────
+  도달 층      10 / 10
+  클리어       성공
+  생존         세인
+  사망         라온, 이린, 세라
+
+── 생존자 State ─────────────────────────────────────────────────
+  세인   hp= 55/100 fatigue=54 fear= 20 memory=5건 goals=[never_abandon_ally]
+
+── 탑의 기록 — 발견된 층 ─────────────────────────────────────────────
+  10개 층이 기록에 남았다: tower_floor_1, tower_floor_2, tower_floor_3, tower_floor_4, tower_floor_5, tower_floor_6, tower_floor_7, tower_floor_8, tower_floor_9, tower_floor_10
+  같은 층을 다시 올라도 다시 발견되지 않는다 — tower_floor_1는 1회만 기록된다
+
+── Event Log — 100건 ──────────────────────────────────────────
+  RelationshipChange   56
+  MajorMemory          18
+  WorldDiscovery       10
+  MissionOutcome       10
+  Death                3
+  LegacyCreation       3
+

@@ -102,7 +102,6 @@ export function initialPlanState(agent: AgentState): PlanState {
     selfSafe: false,
     threat: agent.selfRisk,
     smokeUsed: false,
-    // MVP: 체력이 곧 행동 여력이다. fatigue를 쓰기 시작하면 여기서 갈라진다
-    stamina: Math.round(agent.healthRatio * 100),
+    stamina: Math.round(agent.stamina),
   };
 }
