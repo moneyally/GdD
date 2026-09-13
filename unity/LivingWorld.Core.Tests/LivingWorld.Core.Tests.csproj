@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    NUnit을 쓰는 이유: Unity Test Framework가 NUnit 3 기반이라, 여기서 통과한 테스트를
+    Unity Test Runner로 거의 그대로 옮길 수 있다.
+    이 프로젝트만 net8.0이고 코어는 netstandard2.1이다 (Unity 호환).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>LivingWorld.Core.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../LivingWorld.Core/LivingWorld.Core.csproj" />
+  </ItemGroup>
+
+</Project>

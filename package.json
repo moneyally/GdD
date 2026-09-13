@@ -14,7 +14,8 @@
     "check": "npm run typecheck && npm run test",
     "compare": "tsx src/cli/compare.ts",
     "tower": "tsx src/cli/tower.ts",
-    "tower:stats": "tsx src/cli/towerStats.ts"
+    "tower:stats": "tsx src/cli/towerStats.ts",
+    "golden": "tsx src/cli/golden.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.2",

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Unity에 그대로 들어가는 순수 C# 코어.
+
+    - netstandard2.1: Unity 2021.2+ 가 참조할 수 있는 최대 공통 규격
+    - LangVersion 8.0: record / init 같은 C# 9 문법을 쓰지 않는다.
+      Unity에서 record를 쓰려면 IsExternalInit 심을 직접 선언해야 하고,
+      그런 함정을 코어에 두지 않는다.
+    - UnityEngine 참조 없음. 그래서 이 프로젝트는 dotnet test로 검증되고,
+      Unity에서는 폴더째 Assets/ 아래 넣으면 그대로 컴파일된다.
+      (CORE CONTRACT 규칙 1의 "판단 로직은 렌더 코드에 두지 않는다"를 프로젝트 경계로 못박은 것)
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>LivingWorld.Core</RootNamespace>
+    <AssemblyName>LivingWorld.Core</AssemblyName>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+
+</Project>

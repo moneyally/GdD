@@ -1,0 +1,84 @@
+{
+  "seed": 20260913,
+  "threat": 70,
+  "order": {
+    "goal": "advance",
+    "riskPolicy": "balanced",
+    "retreatCondition": {
+      "healthRatioBelow": 0.3
+    }
+  },
+  "names": [
+    "이린",
+    "노아",
+    "세인",
+    "도하",
+    "미라",
+    "세라",
+    "유진",
+    "라온",
+    "이린 2"
+  ],
+  "encounters": [
+    {
+      "label": "1st/A",
+      "actor": "세인",
+      "action": "RESCUE",
+      "layer": "L1",
+      "reason": "RESCUE(target=CHR_0001,trust=80,fear=20,self_risk=70)",
+      "plan": null,
+      "damage": 49
+    },
+    {
+      "label": "1st/B",
+      "actor": "도하",
+      "action": "RETREAT",
+      "layer": "L1",
+      "reason": "RETREAT(fear=80,self_risk=70,trust=20)",
+      "plan": null,
+      "damage": 0
+    },
+    {
+      "label": "2nd/A",
+      "actor": "세인",
+      "action": "RETREAT",
+      "layer": "L1",
+      "reason": "RETREAT(fear=45,self_risk=91,trust=88,memory=wounded_in_rescue)",
+      "plan": null,
+      "damage": 0
+    },
+    {
+      "label": "2nd/B",
+      "actor": "도하",
+      "action": "RESCUE",
+      "layer": "L2",
+      "reason": "RESCUE(goal=never_abandon_ally,plan=SUPPRESS→RESCUE→FALL_BACK,cost=6.6,source=MEM_0018 overrides fear=72)",
+      "plan": [
+        "SUPPRESS",
+        "RESCUE",
+        "FALL_BACK"
+      ],
+      "damage": 28
+    }
+  ],
+  "events": [
+    "1:RelationshipChange",
+    "2:RelationshipChange",
+    "3:MajorMemory",
+    "4:MajorMemory",
+    "5:MissionOutcome",
+    "6:Death",
+    "7:LegacyCreation",
+    "8:MajorMemory",
+    "9:MissionOutcome",
+    "10:Death",
+    "11:LegacyCreation",
+    "12:MajorMemory",
+    "13:MissionOutcome",
+    "14:RelationshipChange",
+    "15:RelationshipChange",
+    "16:MajorMemory",
+    "17:MajorMemory",
+    "18:MissionOutcome"
+  ]
+}

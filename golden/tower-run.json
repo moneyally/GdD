@@ -1,0 +1,517 @@
+{
+  "seed": 77001,
+  "order": {
+    "goal": "advance",
+    "riskPolicy": "balanced",
+    "retreatCondition": {
+      "healthRatioBelow": 0.25
+    }
+  },
+  "baseTrust": 50,
+  "party": [
+    {
+      "name": "세인",
+      "definition": "CHD_vanguard",
+      "risk": 60,
+      "loyalty": 81,
+      "aggression": 71,
+      "maxHealth": 100
+    },
+    {
+      "name": "라온",
+      "definition": "CHD_vanguard",
+      "risk": 54,
+      "loyalty": 67,
+      "aggression": 55,
+      "maxHealth": 100
+    },
+    {
+      "name": "이린",
+      "definition": "CHD_scout",
+      "risk": 51,
+      "loyalty": 52,
+      "aggression": 55,
+      "maxHealth": 80
+    },
+    {
+      "name": "세라",
+      "definition": "CHD_scout",
+      "risk": 66,
+      "loyalty": 54,
+      "aggression": 40,
+      "maxHealth": 80
+    }
+  ],
+  "floors": [
+    {
+      "floor": 1,
+      "threat": 25,
+      "fallen": "이린",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=50,fear=0,self_risk=25)",
+          "plan": null,
+          "damage": 18
+        },
+        {
+          "actor": "라온",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=50,fear=0,self_risk=25)",
+          "plan": null,
+          "damage": 18
+        },
+        {
+          "actor": "세라",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=50,fear=0,self_risk=25)",
+          "plan": null,
+          "damage": 18
+        }
+      ],
+      "died": []
+    },
+    {
+      "floor": 2,
+      "threat": 30,
+      "fallen": "라온",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0002,trust=50,fear=5,self_risk=31,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 21
+        },
+        {
+          "actor": "이린",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0002,trust=68,fear=0,self_risk=30)",
+          "plan": null,
+          "damage": 21
+        },
+        {
+          "actor": "세라",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0002,trust=50,fear=5,self_risk=32,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 21
+        }
+      ],
+      "died": []
+    },
+    {
+      "floor": 3,
+      "threat": 35,
+      "fallen": "이린",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=58,fear=12,self_risk=38,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 25
+        },
+        {
+          "actor": "라온",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=76,fear=1,self_risk=35,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 25
+        },
+        {
+          "actor": "세라",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=58,fear=12,self_risk=40,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 25
+        }
+      ],
+      "died": []
+    },
+    {
+      "floor": 4,
+      "threat": 40,
+      "fallen": "세라",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0004,trust=50,fear=21,self_risk=47,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 28
+        },
+        {
+          "actor": "라온",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0004,trust=68,fear=10,self_risk=43,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 28
+        },
+        {
+          "actor": "이린",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0004,trust=86,fear=3,self_risk=40,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 28
+        }
+      ],
+      "died": []
+    },
+    {
+      "floor": 5,
+      "threat": 45,
+      "fallen": "세라",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0004,trust=58,fear=31,self_risk=57,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 31
+        },
+        {
+          "actor": "라온",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0004,trust=76,fear=20,self_risk=53,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 31
+        },
+        {
+          "actor": "이린",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0004,trust=94,fear=13,self_risk=51,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 31
+        }
+      ],
+      "died": []
+    },
+    {
+      "floor": 6,
+      "threat": 50,
+      "fallen": "이린",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RETREAT",
+          "layer": "L1",
+          "reason": "RETREAT(fear=43,self_risk=69,trust=66,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 0
+        },
+        {
+          "actor": "라온",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=84,fear=32,self_risk=64,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 35
+        },
+        {
+          "actor": "세라",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=100,fear=13,self_risk=55,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 35
+        }
+      ],
+      "died": []
+    },
+    {
+      "floor": 7,
+      "threat": 55,
+      "fallen": "이린",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RETREAT",
+          "layer": "L1",
+          "reason": "RETREAT(fear=31,self_risk=72,trust=66,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 0
+        },
+        {
+          "actor": "라온",
+          "action": "RETREAT",
+          "layer": "L1",
+          "reason": "RETREAT(fear=46,self_risk=78,trust=92,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 0
+        },
+        {
+          "actor": "세라",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0003,trust=100,fear=27,self_risk=71,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 39
+        }
+      ],
+      "died": []
+    },
+    {
+      "floor": 8,
+      "threat": 60,
+      "fallen": "라온",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0002,trust=58,fear=19,self_risk=74,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 42
+        },
+        {
+          "actor": "이린",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0002,trust=100,fear=17,self_risk=69,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 42
+        },
+        {
+          "actor": "세라",
+          "action": "RETREAT",
+          "layer": "L0",
+          "reason": "RETREAT(health_ratio=0.15<threshold=0.25,order=retreat_condition)",
+          "plan": null,
+          "damage": 0
+        }
+      ],
+      "died": []
+    },
+    {
+      "floor": 9,
+      "threat": 65,
+      "fallen": "라온",
+      "firstVisit": true,
+      "rescued": false,
+      "decisions": [
+        {
+          "actor": "세인",
+          "action": "RETREAT",
+          "layer": "L1",
+          "reason": "RETREAT(fear=36,self_risk=92,trust=66,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 0
+        },
+        {
+          "actor": "이린",
+          "action": "RETREAT",
+          "layer": "L1",
+          "reason": "RETREAT(fear=34,self_risk=90,trust=100,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 0
+        },
+        {
+          "actor": "세라",
+          "action": "RETREAT",
+          "layer": "L1",
+          "reason": "RETREAT(fear=31,self_risk=93,trust=94,memory=wounded_in_rescue)",
+          "plan": null,
+          "damage": 0
+        }
+      ],
+      "died": [
+        "라온"
+      ]
+    },
+    {
+      "floor": 10,
+      "threat": 70,
+      "fallen": "세인",
+      "firstVisit": true,
+      "rescued": true,
+      "decisions": [
+        {
+          "actor": "이린",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0001,trust=86,fear=22,self_risk=92,memory=ally_died_unrescued)",
+          "plan": null,
+          "damage": 49
+        },
+        {
+          "actor": "세라",
+          "action": "RESCUE",
+          "layer": "L1",
+          "reason": "RESCUE(target=CHR_0001,trust=86,fear=19,self_risk=95,memory=ally_died_unrescued)",
+          "plan": null,
+          "damage": 49
+        }
+      ],
+      "died": [
+        "이린",
+        "세라"
+      ]
+    }
+  ],
+  "result": {
+    "deepestFloor": 10,
+    "cleared": true,
+    "abortReason": null,
+    "survivors": [
+      "세인"
+    ],
+    "deaths": [
+      "라온",
+      "이린",
+      "세라"
+    ]
+  },
+  "survivorState": [
+    {
+      "name": "세인",
+      "health": 55,
+      "fatigue": 54,
+      "fear": 20,
+      "memory": [
+        "rescued_ally:58",
+        "wounded_in_rescue:60",
+        "rescued_ally:58",
+        "rescued_ally:58",
+        "ally_died_unrescued:90"
+      ],
+      "goals": [
+        "never_abandon_ally"
+      ]
+    }
+  ],
+  "events": [
+    "1:RelationshipChange",
+    "2:RelationshipChange",
+    "3:RelationshipChange",
+    "4:RelationshipChange",
+    "5:RelationshipChange",
+    "6:RelationshipChange",
+    "7:RelationshipChange",
+    "8:RelationshipChange",
+    "9:RelationshipChange",
+    "10:RelationshipChange",
+    "11:RelationshipChange",
+    "12:RelationshipChange",
+    "13:WorldDiscovery",
+    "14:RelationshipChange",
+    "15:RelationshipChange",
+    "16:MajorMemory",
+    "17:MajorMemory",
+    "18:RelationshipChange",
+    "19:RelationshipChange",
+    "20:MajorMemory",
+    "21:MajorMemory",
+    "22:RelationshipChange",
+    "23:RelationshipChange",
+    "24:MajorMemory",
+    "25:MajorMemory",
+    "26:MissionOutcome",
+    "27:WorldDiscovery",
+    "28:RelationshipChange",
+    "29:RelationshipChange",
+    "30:MajorMemory",
+    "31:RelationshipChange",
+    "32:RelationshipChange",
+    "33:MajorMemory",
+    "34:MajorMemory",
+    "35:RelationshipChange",
+    "36:RelationshipChange",
+    "37:MajorMemory",
+    "38:MissionOutcome",
+    "39:WorldDiscovery",
+    "40:RelationshipChange",
+    "41:RelationshipChange",
+    "42:RelationshipChange",
+    "43:RelationshipChange",
+    "44:RelationshipChange",
+    "45:RelationshipChange",
+    "46:MissionOutcome",
+    "47:WorldDiscovery",
+    "48:RelationshipChange",
+    "49:RelationshipChange",
+    "50:MajorMemory",
+    "51:RelationshipChange",
+    "52:RelationshipChange",
+    "53:MajorMemory",
+    "54:RelationshipChange",
+    "55:RelationshipChange",
+    "56:MajorMemory",
+    "57:MissionOutcome",
+    "58:WorldDiscovery",
+    "59:RelationshipChange",
+    "60:RelationshipChange",
+    "61:RelationshipChange",
+    "62:RelationshipChange",
+    "63:RelationshipChange",
+    "64:RelationshipChange",
+    "65:MissionOutcome",
+    "66:WorldDiscovery",
+    "67:RelationshipChange",
+    "68:RelationshipChange",
+    "69:RelationshipChange",
+    "70:RelationshipChange",
+    "71:MissionOutcome",
+    "72:WorldDiscovery",
+    "73:RelationshipChange",
+    "74:RelationshipChange",
+    "75:MissionOutcome",
+    "76:WorldDiscovery",
+    "77:RelationshipChange",
+    "78:RelationshipChange",
+    "79:RelationshipChange",
+    "80:RelationshipChange",
+    "81:MissionOutcome",
+    "82:WorldDiscovery",
+    "83:Death",
+    "84:LegacyCreation",
+    "85:MajorMemory",
+    "86:MajorMemory",
+    "87:MajorMemory",
+    "88:MissionOutcome",
+    "89:WorldDiscovery",
+    "90:RelationshipChange",
+    "91:RelationshipChange",
+    "92:MajorMemory",
+    "93:Death",
+    "94:LegacyCreation",
+    "95:RelationshipChange",
+    "96:RelationshipChange",
+    "97:MajorMemory",
+    "98:Death",
+    "99:LegacyCreation",
+    "100:MissionOutcome"
+  ]
+}

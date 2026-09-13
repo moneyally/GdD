@@ -65,6 +65,9 @@
 ### 그 외
 
 - [`CORE.md`](CORE.md) — **CORE GAMEPLAY 구현 현황** (증명 결과, 구조, 계약 매핑)
+- [`HANDOFF-UNITY.md`](HANDOFF-UNITY.md) — **Unity 이어받기** (첫 씬 구성, 무료 에셋, MCP 연결)
+- [`docs/proposal/holo-gates.md`](docs/proposal/holo-gates.md) — **홀로그램 탑 / 차원문 결정** + 에셋 예산 재계산
+- [`unity/README.md`](unity/README.md) — C# 포팅과 골든 대조 검증
 - [`docs/logs/core-gameplay-sample.txt`](docs/logs/core-gameplay-sample.txt) — 실행 로그 샘플 (4명)
 - [`docs/logs/decision-comparison.md`](docs/logs/decision-comparison.md) — **판단 비교표** (기억/관계가 행동을 바꾸는 표)
 - [`docs/logs/tower-climb-sample.txt`](docs/logs/tower-climb-sample.txt) — 탑 10층 등반 로그
@@ -86,6 +89,7 @@
 | CORE GAMEPLAY 증명 | 상태가 판단을 바꾸고, 그 결과가 다음 판단을 바꾸는가 | **통과** — [`CORE.md`](CORE.md) |
 | 4명 State / L2 GOAP / 비교표 | 계층형 판단(L0→L2→L1)과 다단계 계획 | **통과** |
 | 탑 10층 미션 | 파티 등반, 첫 사망, Master 명령이 결과를 바꾸는가 | **통과** — 테스트 58개 |
+| Unity 이식 (C#) | 판단 엔진을 C#으로 옮기고 TS와 결과가 같은지 대조 | **통과** — C# 테스트 24개 |
 | 1 Agent Vertical Slice | 캐릭터 1종이 Spawn → 판단 → 성장 → 저장 → **재접속 후 동일 존재로 복원** | 저장/복원 검증 완료, 나머지 미착수 |
 | 2 Small World | 지역 1개 / NPC 50–100 / 원정 1 / 던전 1 / 최소 경제·길드 | 미착수 |
 | 3 Alpha | 다중 Master, 길드, 거래, 시장, 가챠, 합성, LiveOps | 미착수 |
@@ -94,6 +98,14 @@
 Phase 1의 합격 기준이 이 프로젝트의 **첫 번째 진짜 증명**이다.
 
 ---
+
+## 실행
+
+```bash
+npm install && npm run check    # TypeScript 58개
+npm run tower                  # 탑 등반 로그
+cd unity && dotnet test LivingWorld.Core.Tests/LivingWorld.Core.Tests.csproj   # C# 24개
+```
 
 ## 문서 작업 방법
 
