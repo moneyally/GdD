@@ -213,7 +213,25 @@ h3.sec span{font-family:var(--f-mono);font-size:10.5px;color:var(--holo-faint);l
 .frow div{display:flex;gap:8px}
 .frow i{font-style:normal;font-family:var(--f-mono);font-size:10px;color:var(--holo-faint);
   letter-spacing:.1em;padding-top:4px}
-.again{margin-top:14px}
+.again{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+
+/* ── 캠프 — 데려갈 사람들 ────────────────────────── */
+.campbox{margin-top:16px;border:1px solid rgba(224,163,74,.32);border-radius:2px;
+  background:rgba(224,163,74,.05);padding:13px 15px}
+.camphead{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--record);margin-bottom:10px}
+.camprow{display:grid;grid-template-columns:5.2em 4.2em 1fr;gap:6px 12px;align-items:baseline;
+  padding:6px 0;border-top:1px dotted rgba(224,163,74,.18)}
+.camprow:first-of-type{border-top:0}
+.camprow .cn{font-family:var(--f-title);font-size:16px;letter-spacing:.02em}
+.camprow .ca{font-family:var(--f-mono);font-size:10.5px;color:var(--holo-faint)}
+.camprow .cm{font-size:13px;color:var(--holo-dim)}
+.camprow .cm b{color:var(--record);font-weight:600}
+.campnote{margin:11px 0 0;font-size:12.5px;color:var(--holo-faint);line-height:1.55}
+.campnote b{color:var(--holo-bright);font-weight:600}
+@media (max-width:560px){
+  .camprow{grid-template-columns:1fr;gap:2px}
+}
 
 /* ── 기록 ───────────────────────────────────── */
 .ledger{margin-top:38px;border-top:1px solid var(--line-2);padding-top:20px}
