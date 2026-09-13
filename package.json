@@ -15,7 +15,8 @@
     "compare": "tsx src/cli/compare.ts",
     "tower": "tsx src/cli/tower.ts",
     "tower:stats": "tsx src/cli/towerStats.ts",
-    "golden": "tsx src/cli/golden.ts"
+    "golden": "tsx src/cli/golden.ts",
+    "gates:stats": "tsx src/cli/gateStats.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.2",

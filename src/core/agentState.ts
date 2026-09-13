@@ -40,6 +40,16 @@ export interface AgentState {
    * 10층을 오르는 동안 누적되는 피로가 후반 층의 판단을 바꾸는 경로가 여기다.
    */
   readonly stamina: number;
+  /**
+   * 위상 교란기(연막)를 들고 있는가. L2가 SUPPRESS를 계획에 넣을 수 있는지 결정한다.
+   *
+   * 기본값은 true다 — MVP 판단 엔진은 교란기를 무한 자원으로 가정했고, 그 가정 위에서
+   * 골든 대조와 C# 포팅이 검증됐다. 차원문 등반(mission/gates.ts)은 유한 자원이므로
+   * 소지자에게만 true를 넘긴다.
+   *
+   * 차원문이 주 경로가 되면 이 기본값을 false로 뒤집고 골든과 C# 포팅을 함께 재생성해야 한다.
+   */
+  readonly hasSuppressor: boolean;
   readonly memoryInfluences: readonly MemoryInfluence[];
   readonly goals: readonly Goal[];
   readonly order: MasterOrder;
@@ -52,10 +62,16 @@ export interface AgentState {
  * selfRisk는 상황의 위협도에 자기 상태를 반영해 계산한다. 부상 중이면 같은 적도 더 위험하다.
  * 이 한 줄이 "행동 후 State가 변했으므로 다음 판단이 달라진다"의 핵심 경로다.
  */
+export interface AgentStateOptions {
+  /** 교란기 소지 여부. 생략하면 무한 자원으로 취급한다 (기존 동작) */
+  readonly hasSuppressor?: boolean;
+}
+
 export function buildAgentState(
   self: CharacterInstance,
   situation: Situation,
   order: MasterOrder,
+  options?: AgentStateOptions,
 ): AgentState {
   const healthRatio = self.needs.health / self.needs.maxHealth;
   const injuryMultiplier = 1 + (1 - healthRatio) * 0.6;
@@ -70,6 +86,7 @@ export function buildAgentState(
     trustInSubject: situation.subject ? trustToward(self, situation.subject) : 0,
     selfRisk,
     stamina: clamp(healthRatio * 100 - self.needs.fatigue, 0, 100),
+    hasSuppressor: options?.hasSuppressor ?? true,
     memoryInfluences: summarizeMemory(self),
     // 복사한다. Instance의 배열을 그대로 들고 있으면 행동 이후의 변화가
     // '판단 시점 State'에 비쳐서 디버거가 거짓 근거를 보여준다.

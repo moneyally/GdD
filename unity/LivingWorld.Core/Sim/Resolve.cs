@@ -19,6 +19,8 @@ namespace LivingWorld.Core.Sim
         public const int NeverAbandonGoalPriority = 85;
         public const int RescueMemoryImportance = 55;
         public const int WoundMemoryImportance = 45;
+        /// <summary>동료의 죽음을 목격한 기억의 중요도. 내 탓(Abandon 90)보다 약하다.</summary>
+        public const int WitnessMemoryImportance = 60;
         /// <summary>조우 1회당 누적 피로. 오래 버틸수록 행동 여력이 줄어든다.</summary>
         public const int FatiguePerEncounter = 6;
         /// <summary>같은 일이 반복될 때 기존 기억이 강화되는 정도.</summary>
@@ -168,6 +170,37 @@ namespace LivingWorld.Core.Sim
                         Outcome.AbandonMemoryImportance, tick, subject.InstanceId, text);
                     AddGoalFromMemory(actor, memory.MemoryId, tick);
                 }
+            }
+
+            /*
+             * 죽음을 목격하면 기억이 남는다.
+             *
+             * 이 블록이 없던 동안 WitnessedAllyDeath 태그는 정의되고 L1 가중치까지 있는데
+             * 아무도 만들지 않았다 — 동료가 눈앞에서 죽어도 아무 기억이 안 남았다.
+             * "그 역사 때문에 다음 캐릭터의 행동이 달라진다"는 전제와 정면으로 어긋난다.
+             *
+             * 내 탓인 경우(AllyDiedUnrescued)와는 다른 사실이므로 태그를 따로 둔다.
+             * 같은 사건에 두 기억을 겹쳐 쌓지 않도록, 방치로 죽은 대상에 대해서는 목격 기억을 남기지 않는다.
+             */
+            foreach (var victimId in result.Died.ToList())
+            {
+                var victim = world.Instance(victimId);
+                bool abandoned = !result.Rescued && victimId == subject.InstanceId;
+                if (abandoned) continue;
+
+                var observers = request.Decisions
+                    .Select(d => world.Instance(d.Actor))
+                    .Where(actor => actor.IsAlive && actor.InstanceId != victimId)
+                    .ToList();
+
+                // 구조된 당사자도 목격자다 — 나를 구하다 죽은 사람을 잊지 않는다
+                if (result.Rescued && subject.IsAlive && subject.InstanceId != victimId)
+                    observers.Add(subject);
+
+                foreach (var observer in observers)
+                    AddMemory(world, observer, MemoryTag.WitnessedAllyDeath,
+                        Outcome.WitnessMemoryImportance, tick, victimId,
+                        $"{Josa.Topic(victim.Identity.Name)} 눈앞에서 죽었다.");
             }
 
             world.Events.Append(new MissionOutcomeEvent

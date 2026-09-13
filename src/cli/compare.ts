@@ -62,6 +62,7 @@ function buildState(v: Variant): AgentState {
     trustInSubject: v.trust,
     selfRisk: Math.min(100, SCENARIO.enemyThreat * injuryMultiplier),
     stamina: v.healthRatio * 100,
+    hasSuppressor: true,
     memoryInfluences: v.withMemory ? [ABANDON_MEMORY] : [],
     goals: v.withMemory ? [NEVER_ABANDON_GOAL] : [],
     order: SCENARIO.order,

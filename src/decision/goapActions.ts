@@ -60,7 +60,8 @@ export function tolerableThreat(agent: AgentState): number {
 export const GOAP_ACTIONS: readonly GoapAction[] = [
   {
     step: 'SUPPRESS',
-    applicable: (s) => !s.smokeUsed && s.stamina >= SUPPRESS_STAMINA && s.threat > 0,
+    applicable: (s, agent) =>
+      agent.hasSuppressor && !s.smokeUsed && s.stamina >= SUPPRESS_STAMINA && s.threat > 0,
     effect: (s) => ({
       ...s,
       threat: Math.max(0, s.threat - SUPPRESSION_THREAT_REDUCTION),

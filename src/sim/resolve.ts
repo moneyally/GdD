@@ -44,6 +44,8 @@ export const OUTCOME = {
   rescueMemoryImportance: 55,
   /** 부상 기억의 중요도 */
   woundMemoryImportance: 45,
+  /** 동료의 죽음을 목격한 기억의 중요도. 내 탓(abandon 90)보다 약하다 */
+  witnessMemoryImportance: 60,
   /** 조우 1회당 누적 피로. 10층을 오르는 동안 행동 여력이 줄어든다 */
   fatiguePerEncounter: 6,
   /** 같은 일이 반복될 때 기존 기억이 강화되는 정도 */
@@ -198,6 +200,41 @@ export const ResolveTransaction: Transaction<ResolveRequest, ResolveResult> = {
               : `내가 물러섰고, ${topic(subject.identity.name)} 거기서 죽었다.`,
         });
         addGoalFromMemory(actor, memory.memoryId, tick);
+      }
+    }
+
+    /*
+     * 죽음을 목격하면 기억이 남는다.
+     *
+     * 이 블록이 없던 동안 `witnessed_ally_death` 태그는 정의되고 L1 가중치까지 있는데
+     * 아무도 만들지 않았다 — 동료가 눈앞에서 죽어도 아무 기억이 안 남았다.
+     * "그 역사 때문에 다음 캐릭터의 행동이 달라진다"는 전제와 정면으로 어긋난다.
+     *
+     * 내 탓인 경우(ally_died_unrescued)와는 다른 사실이므로 태그를 따로 둔다.
+     * 같은 사건에 두 기억을 겹쳐 쌓지 않도록, 방치로 죽은 대상에 대해서는 목격 기억을 남기지 않는다.
+     */
+    for (const victimId of died) {
+      const victim = world.instance(victimId);
+      const abandoned = !rescued && victimId === subject.instanceId;
+
+      const observers: CharacterInstance[] = request.decisions
+        .map((d) => world.instance(d.actor))
+        .filter((actor) => actor.status === 'alive' && actor.instanceId !== victimId);
+
+      // 구조된 당사자도 목격자다 — 나를 구하다 죽은 사람을 잊지 않는다
+      if (rescued && subject.status === 'alive' && subject.instanceId !== victimId) {
+        observers.push(subject);
+      }
+
+      for (const observer of observers) {
+        if (abandoned) continue;
+        addMemory(world, observer, {
+          tag: 'witnessed_ally_death',
+          importance: OUTCOME.witnessMemoryImportance,
+          tick,
+          subject: victimId,
+          text: `${topic(victim.identity.name)} 눈앞에서 죽었다.`,
+        });
       }
     }
 

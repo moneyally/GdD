@@ -47,6 +47,7 @@ function state(overrides: Partial<AgentState> = {}): AgentState {
     trustInSubject: 20,
     selfRisk: 70,
     stamina: 100,
+    hasSuppressor: true,
     memoryInfluences: [MEMORY],
     goals: [GOAL],
     order: SCENARIO.order,
@@ -87,6 +88,17 @@ describe('플래너가 내는 계획이 말이 되는가', () => {
     const s = state({ fear: 80, healthRatio: 0.45, selfRisk: 93, stamina: 45 });
     expect(applyL2(s)).toBeUndefined();
     expect(decide(s).reason.layer).toBe('L1');
+  });
+
+  it('교란기가 없으면 연막을 계획에 넣을 수 없다', () => {
+    // 같은 상태에서 소지 여부만 뒤집는다
+    const withKit = state({ fear: 80 });
+    const without = state({ fear: 80, hasSuppressor: false });
+
+    expect(applyL2(withKit)!.plan.steps).toContain('SUPPRESS');
+    // 연막이 없으면 감당 상한을 넘는 위협을 메울 방법이 사라진다 → 계획 불가
+    expect(applyL2(without)).toBeUndefined();
+    expect(decide(without).reason.layer).toBe('L1');
   });
 
   it('목표가 없으면 L2는 아무것도 하지 않는다', () => {

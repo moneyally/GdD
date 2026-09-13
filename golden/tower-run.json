@@ -405,7 +405,9 @@
         "wounded_in_rescue:60",
         "rescued_ally:58",
         "rescued_ally:58",
-        "ally_died_unrescued:90"
+        "ally_died_unrescued:90",
+        "witnessed_ally_death:60",
+        "witnessed_ally_death:60"
       ],
       "goals": [
         "never_abandon_ally"
@@ -512,6 +514,8 @@
     "97:MajorMemory",
     "98:Death",
     "99:LegacyCreation",
-    "100:MissionOutcome"
+    "100:MajorMemory",
+    "101:MajorMemory",
+    "102:MissionOutcome"
   ]
 }
